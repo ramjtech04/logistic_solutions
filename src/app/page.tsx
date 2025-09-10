@@ -12,7 +12,7 @@ export default function Home() {
           height={38}
           priority
         />
-        <h1>CHange ho rha hai ya nahi</h1>
+        <h1>change ho rha ki nhai ho rha bhai !!</h1>
         <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
           <li className="mb-2 tracking-[-.01em]">
               hello world changed{" "}
