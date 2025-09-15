@@ -13,7 +13,8 @@
     "sourceMap": true,                      // Generate source maps
     "declaration": true,                    // Generate .d.ts files
     "declarationMap": true,
-    "types": ["node"]                       // Include Node type definitions
+    "types": ["node"] ,  
+    "typeRoots": ["./node_modules/@types", "./src/types"]                    // Include Node type definitions
   },
   "include": ["src/**/*"],                  // All TS files in src folder
   "exclude": ["node_modules", "dist"]
