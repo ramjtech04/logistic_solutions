@@ -6,8 +6,12 @@ export const registerValidation = [
     .isLength({ min: 2 }).withMessage("Name must be at least 2 chars long"),
 
   body("email")
-    .isEmail().withMessage("Must be a valid email"),
+    .matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/)
+    .withMessage("Only valid Gmail addresses are allowed (no spaces/special chars before @).")
+    .isEmail()
+    .withMessage("Email must be valid"),
   body("phone")
+  .matches(/^[6-9]\d{9}$/)
   .isLength({ min: 10 }).withMessage("Phone must be at least 10 digits"),
   body("password")
     .isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),

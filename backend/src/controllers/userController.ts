@@ -59,23 +59,53 @@ export const createUserByAdmin = async (req: Request, res: Response) => {
 };
 
 //READ
-// Get all users (Admin only)
-export const getAllUsers = async (req: Request, res: Response) => {
+// // Get all users (Admin only)
+// Get all Admins
+export const getAdmins = async (req: Request, res: Response) => {
   try {
-    const users = await User.find().select("-password");
-    res.json({
-      success: true,
-      message: "Users fetched successfully",
-      data: users,
-    });
+    const users = await User.find({ role: "admin" }).select("-password");
+    res.status(200).json({ success: true, data: users });
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || "Server error",
-      data: null,
-    });
+    res.status(500).json({ success: false, message: error.message || "Server error" });
   }
 };
+
+// Get all Customers
+export const getCustomers = async (req: Request, res: Response) => {
+  try {
+    const users = await User.find({ role: "customer" }).select("-password");
+    res.status(200).json({ success: true, data: users });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message || "Server error" });
+  }
+};
+
+// Get all Truck Owners
+export const getTruckOwners = async (req: Request, res: Response) => {
+  try {
+    const users = await User.find({ role: "truck_owner" }).select("-password");
+    res.status(200).json({ success: true, data: users });
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message || "Server error" });
+  }
+};
+
+// export const getAllUsers = async (req: Request, res: Response) => {
+//   try {
+//     const users = await User.find().select("-password");
+//     res.json({
+//       success: true,
+//       message: "Users fetched successfully",
+//       data: users,
+//     });
+//   } catch (error: any) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message || "Server error",
+//       data: null,
+//     });
+//   }
+// };
 
 //UPDATE
 // Admin updates another user (including role)
