@@ -15,7 +15,6 @@ export const registerValidation = [
   .isLength({ min: 10 }).withMessage("Phone must be at least 10 digits"),
   body("password")
     .isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
-
   body("role")
     .optional()
     .isIn(["admin", "truck_owner", "customer"]).withMessage("Invalid role"),
@@ -24,4 +23,9 @@ export const registerValidation = [
 export const loginValidation = [
   body("email").isEmail().withMessage("Must be a valid email"),
   body("password").notEmpty().withMessage("Password is required"),
+];
+export const resetPasswordValidation = [
+  body("newPassword")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters"),
 ];
