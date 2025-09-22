@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import User from "../models/userModel";
+import User,{ IUser } from "../models/userModel";
 
 //CREATE
 // Admin creates user 
@@ -90,29 +90,12 @@ export const getTruckOwners = async (req: Request, res: Response) => {
   }
 };
 
-// export const getAllUsers = async (req: Request, res: Response) => {
-//   try {
-//     const users = await User.find().select("-password");
-//     res.json({
-//       success: true,
-//       message: "Users fetched successfully",
-//       data: users,
-//     });
-//   } catch (error: any) {
-//     res.status(500).json({
-//       success: false,
-//       message: error.message || "Server error",
-//       data: null,
-//     });
-//   }
-// };
-
 //UPDATE
 // Admin updates another user (including role)
 export const updateUserByAdmin = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;
-    const updates: any = { ...req.body };
+    const updates: Partial<IUser> = { ...req.body };
       // Check if email is being updated and if it's already in use
     if (updates.email) {
       const existing = await User.findOne({ email: updates.email, _id: { $ne: userId } });
@@ -200,9 +183,9 @@ export const getUserById = async (req: Request, res: Response) => {
         data: null,
       });
     }
-
+if (!req.user) return res.status(401).json({ success: false, message: "Unauthorized", data: null });
     // Allow self or admin
-    if ((req as any).user.role !== "admin" && (req as any).user.id !== userId) {
+    if (req.user.role !== "admin" && req.user.id !== userId) {
       return res.status(403).json({
         success: false,
         message: "Not authorized",
@@ -226,9 +209,11 @@ export const getUserById = async (req: Request, res: Response) => {
 
 // Get logged-in user profile
 export const getMe = async (req: Request, res: Response) => {
+   
   try {
-    const userId = (req as any).user.id;
-    const user = await User.findById(userId).select("-password");
+    if (!req.user) return res.status(401).json({ success: false, message: "Unauthorized", data: null });
+    
+    const user = await User.findById(req.user.id).select("-password");
 
     if (!user) {
       return res.status(404).json({
@@ -255,10 +240,11 @@ export const getMe = async (req: Request, res: Response) => {
 // Update logged-in user
 export const updateMe = async (req: Request, res: Response) => {
   try {
-    const updates = req.body;
-    const userId = (req as any).user.id;
+    if (!req.user) return res.status(401).json({ success: false, message: "Unauthorized", data: null });
 
-    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+    const updates: Partial<IUser> = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, updates, {
       new: true,
       runValidators: true,
     }).select("-password");
@@ -288,8 +274,9 @@ export const updateMe = async (req: Request, res: Response) => {
 // Delete logged-in user
 export const deleteMe = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
-    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!req.user) return res.status(401).json({ success: false, message: "Unauthorized", data: null });
+
+    const deletedUser = await User.findByIdAndDelete(req.user.id);
 
     if (!deletedUser) {
       return res.status(404).json({
@@ -312,4 +299,3 @@ export const deleteMe = async (req: Request, res: Response) => {
     });
   }
 };
-
