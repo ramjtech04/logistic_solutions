@@ -1,5 +1,6 @@
 import React from 'react'
 import { LoginForm } from '@/app/Components/login-form'
+import Link from 'next/link'
 
 
 
@@ -7,23 +8,23 @@ const Loginpage = () => {
   return (
   <>
 
-   <div className="grid min-h-svh lg:grid-cols-2">
+   <div className="grid lg:min-h-svh  grid-cols-1 lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
-          <a href="#" className="flex items-center gap-2 font-medium">
-            <div className="bg-primary text-primary-foreground flex size-14 items-center justify-center rounded-md">
+          
+           <Link href="/" className=" flex items-center ">
         
-             <img
-          src="/trucklogo.png"
+           <img
+          src="/v1.jpg"
           alt="Image"
-          className=""
+          className=" h-[25px]   sm:h-[25px] mr-2"
+          
         />
-        
-            </div>
-          Logistic Solution
-          </a>
+       <span className=" text-sm font-bold text-dark-600 ">LOGISTIC</span><span className=" text-sm  text-dark-600">SOLUTION</span>
+       
+        </Link>
         </div>
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 md:items-center justify-center">
           <div className="w-full max-w-xs">
           <LoginForm/>
           </div>

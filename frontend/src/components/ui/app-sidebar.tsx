@@ -60,17 +60,14 @@ const data = {
       ],
     },
     {
-      title: "Vechiles",
+      title: "Trucks",
       url: "#",
       icon: TruckElectric,
       items: [
+        
         {
-          title: "Add New Vechiles",
-          url: "#",
-        },
-        {
-          title: "List Vechicles",
-          url: "#",
+          title: "List Trucks",
+          url: "/admin/truck",
         },
        
       ],

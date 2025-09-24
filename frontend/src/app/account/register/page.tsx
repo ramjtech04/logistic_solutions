@@ -1,4 +1,5 @@
 import { SignUpForm } from '@/app/Components/sign-up'
+import Link from 'next/link'
 import React from 'react'
 
 const SignUppage = () => {
@@ -7,20 +8,20 @@ const SignUppage = () => {
 
    <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex justify-center gap-2 md:justify-start">
-          <a href="#" className="flex items-center gap-2 font-medium">
-            <div className="bg-primary text-primary-foreground flex size-14 items-center justify-center rounded-md">
-          
-             <img
-          src="/trucklogo.png"
-          alt="Image"
-          className=""
-        />
-            </div>
-          Logistic Solution
-          </a>
+        <div className="flex  gap-2 justify-center md:justify-start">
+            <Link href="/" className=" flex items-center ">
+                  
+                     <img
+                    src="/v1.jpg"
+                    alt="Image"
+                    className=" h-[25px]   sm:h-[25px] mr-2"
+                    
+                  />
+                 <span className="text-sm font-bold text-dark-600 ">LOGISTIC</span><span className=" text-sm  text-dark-600">SOLUTION</span>
+                 
+                  </Link>
         </div>
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 md:items-center justify-center">
           <div className="w-full max-w-xs">
       <SignUpForm/>
           </div>

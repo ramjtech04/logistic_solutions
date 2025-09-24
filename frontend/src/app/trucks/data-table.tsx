@@ -26,28 +26,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
+import { BsFuelPump } from "react-icons/bs";
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
-
+import { FaTruck } from "react-icons/fa";
+import { LuSettings2 } from "react-icons/lu";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-export function DataTable<TData, TValue>({
+export function DataTables<TData, TValue>({
   columns,
   data,
+  
 }: DataTableProps<TData, TValue>) {
     
   const [sorting, setSorting] = useState<SortingState>([])
    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
     []
   )
+  const [globalFilter, setGlobalFilter] = useState("")
    const [columnVisibility, setColumnVisibility] =
     useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = useState({})
-    const[globalFilter,setGlobalFilter]=useState("")
   const table = useReactTable({
     data,
     columns,
@@ -65,29 +67,96 @@ export function DataTable<TData, TValue>({
        columnFilters,
        rowSelection,
         columnVisibility,
-        globalFilter
-    },
+        globalFilter,
+    }
   })
 
   return (
     <>
-          <div className="flex items-center py-4">
-        
-         <Input
-         placeholder="Search"
-         value={globalFilter}
-         onChange={(event) => setGlobalFilter(event.target.value)}
-         className="max-w-md"
-       />
+          <div className="flex  items-center  py-4">
      
+
+     <Input
+  placeholder="Search truckNumber, city, state..."
+  value={globalFilter}
+  onChange={(event) => setGlobalFilter(event.target.value)}
+  className="max-w-md"
+/>
+     
+     
+  <DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="outline" className="ml-2">
+      <BsFuelPump />
+<span className="hidden sm:block">
+      {table.getColumn("fuelType")?.getFilterValue() as string || "Fuel Type"}
+      </span>
+    </Button>
+  </DropdownMenuTrigger>
+
+  <DropdownMenuContent>
+    <DropdownMenuCheckboxItem
+      checked={!table.getColumn("fuelType")?.getFilterValue()}
+      onCheckedChange={() => table.getColumn("fuelType")?.setFilterValue("")}
+    >
+      All
+    </DropdownMenuCheckboxItem>
+    {Array.from(new Set(data.map((d: any) => d.fuelType))).map((fuel) => (
+  <DropdownMenuCheckboxItem
+    key={fuel}
+    checked={table.getColumn("fuelType")?.getFilterValue() === fuel}
+    onCheckedChange={() => table.getColumn("fuelType")?.setFilterValue(fuel)}
+  >
+    {fuel}
+  </DropdownMenuCheckboxItem>
+))}
+
+  </DropdownMenuContent>
+</DropdownMenu>
+
+ 
+     
+        <DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="outline" className="ml-2">
+      <FaTruck />
+      <span className="hidden md:block">
+
+           {table.getColumn("truckType")?.getFilterValue() as string || "Truck Type"}
+      </span>
+   
+    </Button>
+  </DropdownMenuTrigger>
+
+  <DropdownMenuContent>
+    <DropdownMenuCheckboxItem
+      checked={!table.getColumn("truckType")?.getFilterValue()}
+      onCheckedChange={() => table.getColumn("truckType")?.setFilterValue("")}
+    >
+      All
+    </DropdownMenuCheckboxItem>
+    {Array.from(new Set(data.map((d: any) => d.truckType))).map((trucks) => (
+  <DropdownMenuCheckboxItem
+    key={trucks}
+    checked={table.getColumn("truckType")?.getFilterValue() === trucks}
+    onCheckedChange={() => table.getColumn("truckType")?.setFilterValue(trucks)}
+  >
+    {trucks}
+  </DropdownMenuCheckboxItem>
+))}
+
+  </DropdownMenuContent>
+</DropdownMenu>
+
+ 
 
          <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              View
+            <Button variant="outline" className="sm:ml-auto">
+              <LuSettings2 /> <span className="hidden md:block">View</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent >
             {table
               .getAllColumns()
               .filter(
@@ -118,7 +187,7 @@ export function DataTable<TData, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="text-center">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -139,7 +208,7 @@ export function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id} className="text-center">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

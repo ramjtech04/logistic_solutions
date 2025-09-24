@@ -6,13 +6,14 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation";
-
+import Swal from 'sweetalert2';
 
 export function LoginForm({
 
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  
   const router =useRouter();
   const [email,setemail]=useState("");
   const [password,setpassword]=useState("");
@@ -33,23 +34,39 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
       });
 
       const data = await res.json();
-     alert(data.message);
-      if (!res.ok) {
-        throw new Error(data.message || "Login failed");
-      }
-
- 
-   
- if (data.data.role === "admin") {
-  localStorage.setItem("token", data.data.token);
- 
-router.push("/admin/dashboard")
-       // window.location.href = "/admin/dashboard"; // Admin ke liye
+   console.log(data)
+   if(data.success){
+   Swal.fire({
+      title: data.success ? "Success" : "Error",
+      text: data.message,
+      icon: data.success ? "success":"error",
+      confirmButtonText: "OK",
+     
+    }).then(() => {
+      // Redirect after closing alert
+      localStorage.setItem("token", data.data.token);
+     
+      if (data.data.role === "admin") {
+        router.push("/admin/dashboard");
       } else {
-          localStorage.setItem("token", data.data.token);
-          localStorage.setItem("role", data.data.role);
-        window.location.href = "/"; 
+        localStorage.setItem("role", data.data.role);
+        localStorage.setItem("userId", data.data.id);
+        router.push("/");
       }
+    })
+   }else{
+    Swal.fire({
+      title: "Error",
+      text: data.message,
+      icon: "error",
+    })
+   }
+    
+    //  alert(data.message);
+     
+      // if (!res.ok) {
+      //   throw new Error(data.message || "Login failed");
+      // }
      
     } catch (err) {
    

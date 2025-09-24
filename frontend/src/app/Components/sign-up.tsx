@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useState } from "react"
+import Swal from 'sweetalert2';
 import {
   Select,
   SelectContent,
@@ -39,15 +40,24 @@ export function SignUpForm({
   
         const data = await res.json();
        
-       
-        if (!res.ok) {
-            alert(data.message)
-          throw new Error(data.errors[0].msg || "Login failed");
-        
-        }else{
-  alert(data.message);
+      if(data.success){
+ Swal.fire({
+      title: data.success ? "Success" : "Error",
+      text: data.message,
+      icon: data.success ? "success":"error",
+      confirmButtonText: "OK",
+    }).then(() => {
           window.location.href = "/account/login"; 
-        }
+   
+    })
+      }else{
+ Swal.fire({
+      title: "Error",
+      text: data.message,
+      icon: "error",
+    })
+      }
+       
         
         
        
