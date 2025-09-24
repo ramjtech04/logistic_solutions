@@ -167,3 +167,21 @@ export const acceptRequest = async (req: Request, res: Response) => {
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+// Get all available trucks for logged-in truck owner
+export const getMyAvailableTrucks = async (req: Request, res: Response) => {
+  try {
+    const truckOwnerId = req.user?.id;
+    if (!truckOwnerId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const trucks = await Truck.find({ truckOwnerId, status: "available" })
+      .select("truckNumber truckType capacity fuelType city state");
+
+    return res.status(200).json({ success: true, trucks });
+  } catch (error: any) {
+    console.error("Error fetching available trucks:", error.message);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+

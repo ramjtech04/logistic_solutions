@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware";
-import { createRequest, getMyRequests,getAvailableRequests,acceptRequest } from "../controllers/requestController";
+import { createRequest, getMyRequests,getAvailableRequests,acceptRequest,getMyAvailableTrucks} from "../controllers/requestController";
 import { createRequestValidation } from "../validators/requestValidator";
 import { validateRequest } from "../middleware/validateRequest";
 import { authorizeRoles } from "../middleware/roleMiddleware";
@@ -19,4 +19,6 @@ router.get(
   // Truck owner routes
 router.get("/available", verifyToken, authorizeRoles(["truck_owner"]), getAvailableRequests);
 router.post("/accept/:id", verifyToken, authorizeRoles(["truck_owner"]), acceptRequest);
+router.get("/my-available", verifyToken, authorizeRoles(["truck_owner"]),getMyAvailableTrucks);
+
 export default router;
