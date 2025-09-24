@@ -122,7 +122,7 @@ export const acceptRequest = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: "Invalid truck selection or truck already busy" });
     }
 
-    // Atomic update: only accept if request is still pending
+    //  only accept if request is still pending
     const updatedRequest = await RequestModel.findOneAndUpdate(
       { _id: requestId, requestStatus: "Pending" },
       {

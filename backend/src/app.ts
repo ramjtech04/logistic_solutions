@@ -8,6 +8,7 @@ import userRoutes from "./routes/userRoutes";
 import roleRoutes from "./routes/roleRoutes";
 import truckRoutes from "./routes/truckRoutes";
 import requestRoutes from "./routes/requestRoutes";
+import adminRoutes from "./routes/adminRoutes";
 dotenv.config();
 
 const app: Application = express();
@@ -22,6 +23,8 @@ app.use("/api/users",userRoutes);
 app.use("/api/roles",roleRoutes);
 app.use("/api/trucks",truckRoutes);
 app.use("/api/requests",requestRoutes);
+app.use("/api/admin",adminRoutes);
+
 // Test Route
 app.get("/", (req: Request, res: Response) => {
   res.send("Backend is running with TypeScript!");
