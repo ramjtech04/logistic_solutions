@@ -44,7 +44,14 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const router =useRouter();
-
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role"); // role hatao
+   
+    console.log("Logged out, role removed!");
+    router.push("/account/login"); // Home page par redirect karo
+  };
 
   return (
     <SidebarMenu>
@@ -111,7 +118,7 @@ export function NavUser({
             </DropdownMenuGroup> */}
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => { router.push("/account/login")}}>
+            <DropdownMenuItem onClick={handleLogout}>
             
               <LogOut />
               Logout 

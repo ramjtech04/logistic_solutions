@@ -1,10 +1,6 @@
-"use client";
 
-import { useEffect, useState } from "react";
-// import {  User } from "./columns";
-import { DataTable } from "@/components/ui/data-tables";
 import { AppSidebar } from "@/components/ui/app-sidebar";
-import * as ColumnsModule from "../columns";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -20,28 +16,12 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { User } from "../columns";
+import SignUppage from "@/app/account/register/page";
+import { SignUpForm } from "@/app/Components/sign-up";
 
-export default function TruckOwnerListPage() {
-  const [data, setData] = useState<User[]>([]);
- const fetchData = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-const url=process.env.NEXT_PUBLIC_URL_BASE;
-
-    const res = await fetch(`${url}api/users/truck-owners`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    const result = await res.json();
-    setData(result.data);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+export default function CustomerListPage() {
   
- const tableColumns = ColumnsModule.columns(fetchData);
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -64,17 +44,23 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Truck Owners</BreadcrumbPage>
+                  <BreadcrumbPage>Add User</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="bg-white/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min">
-            <DataTable columns={tableColumns} data={data} />
+          <div className="bg-white/50 min-h-[100vh] flex-1   rounded-xl md:min-h-min">
+          
+
+       
+        <div className=" max-w-xl">
+         <SignUpForm />
+         </div>
+            </div>
           </div>
-        </div>
+        
       </SidebarInset>
     </SidebarProvider>
   );

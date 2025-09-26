@@ -5,12 +5,10 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
-
-
+import Swal from 'sweetalert2';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 interface FormData {
  
   pickupcity: string;
@@ -22,7 +20,10 @@ const TruckForm: React.FC = () => {
     const [data, setData] = useState<any[]>([]); 
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const router =useRouter();
-
+const [showTruckModal, setShowTruckModal] = useState(false);
+const [trucks, setTrucks] = useState<any[]>([]);
+const [selectedTruck, setSelectedTruck] = useState<string>("");
+const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     pickupcity: "",
   dropcity: "",
@@ -98,11 +99,92 @@ const formatDate = (isoString: string) => {
   const formattedTime = date.toLocaleTimeString("en-GB"); // HH:MM:SS
   return `${formattedDate} ${formattedTime}`;
 };
-const handleAcceptLoad = (id: string) => {
-  console.log("Accepted load with ID:", id);
+const handleAcceptLoad = async (id: string) => {
+  console.log("Accepted load with changed ID:", id);
   // Perform your logic here, e.g., API call
+  try{
+         const token = localStorage.getItem("token");
+       console.log("token "+token)
+        if (!token) return;
+    const url=process.env.NEXT_PUBLIC_URL_BASE;
+    
+        const res = await fetch(`${url}api/requests/my-available`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+    
+        const result = await res.json();
+     
+         setTrucks(result.trucks || []);
+    setSelectedRequestId(id);
+   
+    setShowTruckModal(true);  
+      }catch(err){
+console.log(err)
+      }
 };
 
+const handleSubmitTruck = async()=>{
+   const token = localStorage.getItem("token");
+if(selectedTruck==""){
+
+  Swal.fire({  text: "select Truck", })
+return
+}
+    if (!token) return;
+const url=process.env.NEXT_PUBLIC_URL_BASE;
+Swal.fire({
+  title: "Please wait...",
+  allowOutsideClick: false,
+  didOpen: () => {
+    Swal.showLoading();
+  },
+});
+try{
+    const res = await fetch(`${url}api/requests/accept/${selectedRequestId}`, 
+     {
+          method: "Post",
+          headers: {
+            "Content-Type": "application/json",
+             "Authorization":   `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({truckId:selectedTruck}),
+        });
+
+    const result = await res.json();
+   if(result.success){
+  
+   await  Swal.fire({
+          title: "Accepted",
+          text: "Please Wait for Admin Approval for customer  information",
+          icon: "success",
+          confirmButtonText: "OK",
+         
+        }).then(() => {
+setSelectedTruck("")
+setShowTruckModal(false);
+       fetchData(); 
+      setFilteredData([]); 
+      
+        })
+   }else{
+   
+   await  Swal.fire({
+          title: "Error",
+          text: result.message,
+          icon: "info",        
+        })
+   }
+  }catch(err){
+    alert(err)
+  }finally{
+    Swal.close();
+  }
+
+}
+const handCLoseMOdel =()=>{
+setShowTruckModal(false)
+setSelectedTruck("")
+}
   return (
     <>
     <Navbar />
@@ -174,7 +256,7 @@ const handleAcceptLoad = (id: string) => {
           <p><strong>Destination Location:</strong> {request.dropCity}</p>
           <p className="text-red-800  text-md"><strong> {request.loadType}/{request.loadWeight}</strong></p>
           
-          <Button variant={'outline'}   onClick={() => handleAcceptLoad(request.id)} >Accept Load</Button>
+          <Button variant={'outline'}   onClick={() => handleAcceptLoad(request._id)} >Accept Load</Button>
         </li>
       ))}
     </ul>
@@ -183,6 +265,39 @@ const handleAcceptLoad = (id: string) => {
   )}
 </div>
 
+{
+  showTruckModal && (
+    <>
+<div className="fixed inset-0 bg-white bg-opacity-100 flex  justify-center items-center">
+   <div className="bg-white p-6 rounded shadow-lg w-96">
+    <h1>Select Truck</h1>
+    <div className="mb-2">
+    <RadioGroup
+  value={selectedTruck}
+  onValueChange={(value) => setSelectedTruck(value)}
+      className="flex flex-col space-y-2"
+    >
+      {trucks.length > 0 ? (
+        trucks.map((truck: any) => (
+          <div key={truck._id} className="flex items-center space-x-2">
+            <RadioGroupItem value={truck._id} id={truck._id} />
+            <Label htmlFor={truck._id}>
+              {truck.truckNumber} — {truck.truckType}
+            </Label>
+          </div>
+        ))
+      ) : (
+        <p>No trucks available</p>
+      )}
+    </RadioGroup>
+</div>
+<Button variant={'outline'} onClick={handleSubmitTruck}>Submit</Button>
+<Button onClick={handCLoseMOdel}>CLose</Button>
+    </div>
+    </div>
+    </>
+  )
+}
     </>
   );
 };

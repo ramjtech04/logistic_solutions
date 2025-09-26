@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { FiLoader } from "react-icons/fi";
-
+import Swal from 'sweetalert2'
 import {
   Alert,
   AlertDescription,
@@ -23,7 +23,15 @@ export function ForgetForm({
 
 const [loader ,setloader]=useState(false);
     const handleSubmit = async(e: React.FormEvent) => {
-        setloader(true);
+        // setloader(true);
+         Swal.fire({
+             title: "Please wait...",
+             text: "Submitting your request",
+             allowOutsideClick: false,
+             didOpen: () => {
+               Swal.showLoading()
+             }
+           }); 
          e.preventDefault();      
   const emailInput = (e.target as HTMLFormElement).email as HTMLInputElement;
   const email = emailInput.value;
@@ -43,10 +51,16 @@ const [loader ,setloader]=useState(false);
       const data = await response.json();
       console.log("✅ Server Response:", data);
     if(!response.ok){
-        alert(data.message || "Something went wrong");
+      await  Swal.fire({
+            title: "Failed",
+            text: data.message || "Something went wrong",
+            icon:"info"
+          });
+      
         return;
     }else{
         setloader(false);
+        Swal.close();
     if (onNext) onNext();
     }
 }catch(err){
@@ -54,6 +68,7 @@ const [loader ,setloader]=useState(false);
     alert("Something went wrong. Please try again later.");
 } finally{
     setloader(false);
+    Swal.close();
 }
     
 

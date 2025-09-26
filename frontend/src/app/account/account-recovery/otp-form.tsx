@@ -2,9 +2,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import Link from "next/link"
-import {CheckCircle2Icon } from "lucide-react"
-
+import Swal from 'sweetalert2'
 import {
   Alert,
   AlertDescription,
@@ -35,11 +33,20 @@ export function OTPForm({
       const data = await response.json();
       console.log("✅ Server Response:", data);
     if(!response.ok){
-        alert(data.message || "Something went wrong");
+          await  Swal.fire({
+                  title: "Failed",
+                  text: data.message || "Something went wrong",
+                  icon:"info"
+                });
+      
         return;
     }else{
-        
-        alert(data.message || "OTP verified successfully");
+            await  Swal.fire({
+                    title: "success",
+                    text: data.message ||  "OTP verified successfully",
+                    icon:"success"
+                  });
+        // alert(data.message || "OTP verified successfully");
     if (onNext) onNext();
     }
   

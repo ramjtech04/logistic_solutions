@@ -5,13 +5,14 @@ import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import Link from "next/link";
 import { FaTrashAlt } from "react-icons/fa";
-import { FaPen } from "react-icons/fa6";
+import { FaPen, FaUsersViewfinder } from "react-icons/fa6";
 
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Trucks = {
   _id: string;
+  truckOwnerId:string
   truckNumber:string;
   truckType: string;
   capacity:string;
@@ -33,6 +34,7 @@ export const columns=(refreshTable: () => void): ColumnDef<Trucks>[] => [
     cell: ({ row }) => row.index + 1, // ✅ index + 1
     
   },
+  
       {
     accessorKey: "truckNumber",
     header: ({ column }) => {
@@ -45,6 +47,15 @@ export const columns=(refreshTable: () => void): ColumnDef<Trucks>[] => [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
+    },
+     cell: ({ row }) => {
+  
+      return  <Link
+      href={`/trucks/${row.original._id}`} 
+      className="text-blue-600 hover:underline"
+    >
+      {row.original.truckNumber}
+    </Link>
     },
   },
   {
@@ -118,6 +129,7 @@ export const columns=(refreshTable: () => void): ColumnDef<Trucks>[] => [
       )
     },
     },
+     
     {
         accessorKey: "status",
          header: ({ column }) => {
@@ -167,11 +179,19 @@ export const columns=(refreshTable: () => void): ColumnDef<Trucks>[] => [
       <button onClick={handleDelete} className="text-red-500 hover:text-red-700 ">
         <FaTrashAlt size={16} />
       </button>
-      {role=='truck_owner' && (
-       <Link href={`/trucks/${row.original._id}`} className="text-sky-500 hover:text-sky-700">
+      
+     
+         <Link href={`/trucks/${row.original._id}`} className="text-sky-500 hover:text-sky-700">
         <FaPen size={16} />
       </Link>
-      )}
+       
+      
+      
+      
+
+    
+         
+       
       </div>
        </>
     )

@@ -13,14 +13,24 @@ export type User = {
   name:string
   email: string
   phone:string
- 
+  createdAt:string
   
 }
 
 export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
     {
     id: "sno", // no accessorKey needed
-    header: "S.No",
+     header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          SNO
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => row.index + 1, // ✅ index + 1
     
   },
@@ -54,8 +64,38 @@ export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
   },
   {
     accessorKey: "phone",
-    header: "Phone",
+     header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Phone
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+  }
+  ,{
+    accessorKey:"createdAt",
+     header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Created At
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+  
+  cell: ({ row }) => {
+    const date = new Date(row.original.createdAt);
+    return date.toLocaleString(); // e.g. 24/09/2025, 10:30:45 AM
   },
+  }
+  ,
   
   {
   id: "actions",

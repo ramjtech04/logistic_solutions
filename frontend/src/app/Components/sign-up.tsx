@@ -13,11 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { usePathname } from "next/navigation";
 
 export function SignUpForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+   const pathname = usePathname();
   const [name,setname]=useState("");
   const [email,setemail]=useState("");
   const [phone,setphone]=useState("");
@@ -41,13 +43,23 @@ export function SignUpForm({
         const data = await res.json();
        
       if(data.success){
+      
  Swal.fire({
       title: data.success ? "Success" : "Error",
       text: data.message,
       icon: data.success ? "success":"error",
       confirmButtonText: "OK",
     }).then(() => {
-          window.location.href = "/account/login"; 
+
+      setname("")
+      setemail("")
+      setphone("")
+      setpassword("")
+      setrole("")
+      if(pathname.startsWith('/account/register')){
+       window.location.href = "/account/register";
+      }
+          
    
     })
       }else{
@@ -68,11 +80,19 @@ export function SignUpForm({
   return (
     <form onSubmit={handleRegister} className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
+      
+       {(pathname.startsWith('/account/register'))&&(<>
         <h1 className="text-2xl font-bold">SignUp to your account</h1>
         <p className="text-muted-foreground text-sm text-balance">
           Enter your email below to login to your account
         </p>
+       
+       </>)}
+      
+       
+
       </div>
+
       <div className="grid gap-6">
          <div className="grid gap-3">
           <Label htmlFor="email">Name</Label>
@@ -125,17 +145,23 @@ export function SignUpForm({
         </div>
 
         <Button type="submit" className="w-full">
-          Sign up
+   {(pathname.startsWith('/account/register'))?(<>SignUP</>):(<> Add User</>)}
+          
         </Button>
        
      
       </div>
-      <div className="text-center text-sm">
+        {(pathname.startsWith('/account/register'))&&(<>
+        <div className="text-center text-sm">
         Already Have Account ?{" "}
         <Link href="login" className="underline underline-offset-4">
           Sign in
         </Link>
       </div>
+       
+       </>)}
+      
+      
     </form>
   )
 }

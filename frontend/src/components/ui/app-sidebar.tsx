@@ -38,7 +38,8 @@ const data = {
   user: {
     name: "admin",
     email: "admin@gmail.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "/Sample_User_Icon.png",
+    
   },
   navMain: [
     {
@@ -47,7 +48,11 @@ const data = {
       icon: Users2,
       isActive: true,
       items: [
-         
+           
+        {
+          title: "Add User",
+          url: "/admin/Users/add-user",
+        },
         {
           title: "Customer",
           url: "/admin/Users/customer",
@@ -64,7 +69,10 @@ const data = {
       url: "#",
       icon: TruckElectric,
       items: [
-        
+         {
+          title: "Add Trucks",
+          url: "/trucks/add",
+        },
         {
           title: "List Trucks",
           url: "/admin/truck",
@@ -73,17 +81,18 @@ const data = {
       ],
     },
     {
-      title: "Loads",
+      title: "Manage Loads",
       url: "#",
       icon: Boxes,
       items: [
+      
         {
-          title: "Add New Load",
-          url: "#",
+          title: "All Loads",
+          url: "/admin/loads",
         },
         {
-          title: "Show Loads",
-          url: "#",
+          title: "Manage Requests",
+          url: "/admin/loads/loadrequest",
         }
        
       ],

@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import {  User } from "./columns";
-import { DataTable } from "@/components/ui/data-tables";
+import {  Loads } from "./columns";
+
 import { AppSidebar } from "@/components/ui/app-sidebar";
-import * as ColumnsModule from "../columns";
+import * as ColumnsModule from "./columns";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -20,21 +20,22 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { User } from "../columns";
+import { DataTables } from "./data-table";
 
-export default function TruckOwnerListPage() {
-  const [data, setData] = useState<User[]>([]);
+export default function CustomerListPage() {
+  const [data, setData] = useState<Loads[]>([]);
  const fetchData = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
 const url=process.env.NEXT_PUBLIC_URL_BASE;
 
-    const res = await fetch(`${url}api/users/truck-owners`, {
+    const res = await fetch(`${url}api/admin/requests`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
     const result = await res.json();
-    setData(result.data);
+    console.log(result)
+    setData(result.requests);
   };
 
   useEffect(() => {
@@ -60,11 +61,11 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Users</BreadcrumbPage>
+                  <BreadcrumbPage>Loads</BreadcrumbPage>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Truck Owners</BreadcrumbPage>
+                  <BreadcrumbPage>All Loads</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -72,7 +73,7 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="bg-white/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min">
-            <DataTable columns={tableColumns} data={data} />
+            <DataTables columns={tableColumns} data={data} />
           </div>
         </div>
       </SidebarInset>

@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {  User } from "./columns";
+import {  User } from "../columns";
 import { DataTable } from "@/components/ui/data-tables";
 import { AppSidebar } from "@/components/ui/app-sidebar";
-import * as ColumnsModule from "./columns";
+import * as ColumnsModule from "../columns";
 import {
   Breadcrumb,
   BreadcrumbItem,
