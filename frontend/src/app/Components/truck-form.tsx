@@ -52,6 +52,7 @@ const TruckForm = ({ id }: { id?: string }) => {
     const[truckOwnerId ,settruckOwnerId]=useState("");
             const [data, setData] = useState<any[]>([]);
 const role =localStorage.getItem("role")
+console.log(role)
      const fetchData = async () => {
         const token = localStorage.getItem("token");
       
@@ -98,7 +99,7 @@ if (result?.data) {
       
           const result = await res.json();
           console.log(result)
-          setData(result.data);
+          setData(result.data??"");
         };
     
       useEffect(() => {
@@ -170,13 +171,16 @@ const handleSubmit  =  async(e: React.FormEvent) => {
         <CardDescription>{title} information</CardDescription>
       </CardHeader>
       <CardContent>
-      
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+      
 
-                <div className="flex flex-col  gap-3">
+               
+
+                {role == "admin" ? (<>
+                 <div className="flex flex-col  gap-3">
                 <Label htmlFor="text">Truck Owner </Label>
-        <Select required value={truckOwnerId} onValueChange={(value) => settruckOwnerId(value)}  disabled={id ==="add"?false:true}  >
+                   <Select required value={truckOwnerId} onValueChange={(value) => settruckOwnerId(value)}  disabled={id ==="add"?false:true}  >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select Truck Owner" />
              </SelectTrigger>
@@ -188,8 +192,15 @@ const handleSubmit  =  async(e: React.FormEvent) => {
              
                </SelectContent>
               </Select>
-              </div>
+               </div>
 
+</>):(<>
+   <Input id="truckOwner " type="hidden" placeholder="Truck Owner"  
+                value={truckOwnerId}   disabled
+                onChange={(e) => settruckOwnerId(e.target.value)} required/>
+</>)}
+     
+             
 
               
               <div className="flex flex-col  gap-3">

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { useState } from "react"
-import { useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 import Swal from 'sweetalert2';
 
 export function LoginForm({
@@ -15,6 +15,7 @@ export function LoginForm({
 }: React.ComponentProps<"form">) {
   
   const router =useRouter();
+  
   const [email,setemail]=useState("");
   const [password,setpassword]=useState("");
   
@@ -45,12 +46,12 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
     }).then(() => {
       // Redirect after closing alert
       localStorage.setItem("token", data.data.token);
-     
+      localStorage.setItem("role", data.data.role);
+        localStorage.setItem("userId", data.data.id);
       if (data.data.role === "admin") {
         router.push("/admin/dashboard");
       } else {
-        localStorage.setItem("role", data.data.role);
-        localStorage.setItem("userId", data.data.id);
+       
         router.push("/");
       }
     })
