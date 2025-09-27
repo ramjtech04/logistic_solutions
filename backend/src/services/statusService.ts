@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"; 
 import Request from "../models/requestModel";
-import { requestTransitions, deliveryTransitions } from "./statusRules";
-import { RequestStatus, DeliveryStatus } from "../enums/statusEnums";
+import { requestTransitions } from "./statusRules";
+import { RequestStatus } from "../enums/statusEnums";
 
 export const updateRequestStatus = async (
   requestId: string,
@@ -36,26 +36,3 @@ export const updateRequestStatus = async (
   await request.save();
   return request;
 };
-
-export const updateDeliveryStatus = async (
-  requestId: string,
-  newStatus: DeliveryStatus
-) => {
-  const request = await Request.findById(requestId);
-  if (!request) throw new Error("Request not found");
-
-  // Ensure request is approved before delivery updates
-  if (request.requestStatus !== RequestStatus.Approved) {
-    throw new Error("Cannot update delivery until request is approved");
-  }
-
-  const allowed = deliveryTransitions[request.deliveryStatus];
-  if (!allowed.includes(newStatus)) {
-    throw new Error(`Invalid transition from ${request.deliveryStatus} → ${newStatus}`);
-  }
-
-  request.deliveryStatus = newStatus;
-  await request.save();
-  return request;
-};
-

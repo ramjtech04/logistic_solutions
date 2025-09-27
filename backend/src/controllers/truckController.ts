@@ -1,3 +1,9 @@
+//Add truck
+//get all truck irrespective of truck owner
+//get specific truck by id
+//update truck 
+//delete truck
+//get trucks of specific owner
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import Truck from "../models/truckModel";
@@ -126,6 +132,34 @@ export const deleteTruck = async (req: Request, res: Response) => {
     await truck.deleteOne();
     res.status(200).json({ success: true, message: "Truck deleted successfully", data: null });
   } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message || "Server error", data: null });
+  }
+};
+// GET TRUCKS OF SPECIFIC TRUCK OWNER
+export const getTrucksByOwner = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized", data: null });
+    }
+
+    const { truckOwnerId } = req.params;
+
+    if (!truckOwnerId) {
+      return res.status(400).json({ success: false, message: "Truck owner ID is required", data: null });
+    }
+
+    // Only admin or customer can fetch other owner's trucks
+    if (req.user.role === "truck_owner") {
+      return res.status(403).json({ success: false, message: "Forbidden", data: null });
+    }
+
+    const trucks = await Truck.find({ truckOwnerId }).select(
+      "truckNumber truckType capacity fuelType city state status"
+    );
+
+    res.status(200).json({ success: true, message: "Trucks fetched successfully", data: trucks });
+  } catch (error: any) {
+    console.error("Error fetching trucks by owner:", error.message);
     res.status(500).json({ success: false, message: error.message || "Server error", data: null });
   }
 };

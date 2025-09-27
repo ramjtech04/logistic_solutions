@@ -2,7 +2,8 @@
 //get those request that have status=Accepted
 //Approve a request
 //Reject a request
-
+//Manually assign truck to request
+import mongoose from "mongoose";
 import { Request, Response } from "express";
 import RequestModel from "../models/requestModel";
 import Truck from "../models/truckModel";
@@ -173,6 +174,124 @@ export const rejectRequest = async (req: Request, res: Response) => {
     return res.status(200).json({ success: true, request: updatedRequest });
   } catch (error: any) {
     console.error("Error rejecting request:", error.message);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+//Manual Assignment
+// Manual assignment of a truck by admin
+export const manualAssignRequest = async (req: Request, res: Response) => {
+  try {
+    const adminId = req.user?.id;
+    const { requestId, truckId, truckOwnerId } = req.body;
+
+    if (!adminId) return res.status(401).json({ success: false, message: "Unauthorized" });
+    if (!requestId || !truckId)
+      return res.status(400).json({ success: false, message: "Request ID and Truck ID required" });
+
+    const request = await RequestModel.findById(requestId);
+    if (!request) return res.status(404).json({ success: false, message: "Request not found" });
+
+    const truck = await Truck.findOne({ _id: truckId, status: "available" });
+    if (!truck) return res.status(400).json({ success: false, message: "Truck not available" });
+
+    // Assign truck
+    request.assignedTruckId = truck._id as mongoose.Types.ObjectId;
+
+    // Assign truck owner if provided
+    if (truckOwnerId) {
+      if (typeof truckOwnerId === "string" && mongoose.Types.ObjectId.isValid(truckOwnerId)) {
+        request.acceptedByTruckOwnerId = new mongoose.Types.ObjectId(truckOwnerId);
+      } else {
+        return res.status(400).json({ success: false, message: "Invalid truckOwnerId" });
+      }
+    }
+
+    request.requestStatus = RequestStatus.Approved;
+    request.approvedByAdminId = adminId;
+
+    await request.save();
+
+    // Update truck status
+    truck.status = "busy";
+    await truck.save();
+
+    // Populate for email content
+    await request.populate("customerId", "name email phone");
+    await request.populate("acceptedByTruckOwnerId", "name email phone");
+    await request.populate("assignedTruckId", "truckNumber truckType capacity");
+
+    const customer: any = request.customerId;
+    const truckOwner: any = request.acceptedByTruckOwnerId;
+    const assignedTruck: any = request.assignedTruckId;
+
+    // Email to customer
+    if (customer?.email) {
+      await sendEmail({
+        to: customer.email,
+        subject: "Your Request has been Assigned by Admin ✅",
+        text: `Hello ${customer.name},
+Your transport request has been manually assigned by the admin.
+
+Details:
+- Truck Assigned: ${assignedTruck?.truckNumber || "Not Assigned"} (${assignedTruck?.truckType || "N/A"})
+- Truck Owner: ${truckOwner?.name || "Not assigned"}
+- Contact: ${truckOwner?.phone || "Not available"}
+- Request ID: ${request._id}
+
+Our team will contact you soon for further updates.`,
+      });
+    }
+
+    // Email to truck owner
+    if (truckOwner?.email) {
+      await sendEmail({
+        to: truckOwner.email,
+        subject: "You have been Assigned a Request by Admin ✅",
+        text: `Hello ${truckOwner.name},
+The admin has manually assigned you to a customer request.
+
+Details:
+- Customer: ${customer?.name || "Not available"}
+- Contact: ${customer?.phone || "Not available"}
+- Truck Assigned: ${assignedTruck?.truckNumber || "Not defined"} (${assignedTruck?.truckType || "N/A"})
+- Request ID: ${request._id}
+
+Please coordinate with the customer to proceed further.`,
+      });
+    }
+
+    return res.status(200).json({ success: true, request });
+  } catch (error: any) {
+    console.error("Error in manual assignment:", error.message);
+    return res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+// Delete a request
+export const deleteRequest = async (req: Request, res: Response) => {
+  try {
+    const adminId = req.user?.id;
+    const requestId = req.params.id;
+
+    if (!adminId) 
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    if (!requestId) 
+      return res.status(400).json({ success: false, message: "Request ID is required" });
+
+    const request = await RequestModel.findById(requestId);
+    if (!request) 
+      return res.status(404).json({ success: false, message: "Request not found" });
+
+    // Delete the request
+    await RequestModel.findByIdAndDelete(requestId);
+
+    // free the assigned truck if any
+    if (request.assignedTruckId) {
+      await Truck.findByIdAndUpdate(request.assignedTruckId, { status: "available" });
+    }
+
+    return res.status(200).json({ success: true, message: "Request deleted successfully" });
+  } catch (error: any) {
+    console.error("Error deleting request:", error.message);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };

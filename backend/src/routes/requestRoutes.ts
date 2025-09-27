@@ -8,15 +8,17 @@ const router = Router();
 
 // Create a new request
 // Only Customers can create
-router.post("/",verifyToken, authorizeRoles(["admin","customer"]),
+router.post("/create",verifyToken, authorizeRoles(["admin","customer"]),
   createRequestValidation,validateRequest,createRequest);
 
 // Get all requests of logged-in customer
-router.get("/my",verifyToken,authorizeRoles(["customer"]),getMyRequests);
-
+router.get("/my-requests",verifyToken,authorizeRoles(["customer"]),getMyRequests);
 // Truck owner routes
+//fetch all trucks with status=available
 router.get("/available", verifyToken, authorizeRoles(["truck_owner","admin"]), getAvailableRequests);
+//accept request
 router.post("/accept/:id", verifyToken, authorizeRoles(["truck_owner","admin"]), acceptRequest);
+//fetch only logged in customer status=available trucks
 router.get("/my-available", verifyToken, authorizeRoles(["truck_owner","admin"]),getMyAvailableTrucks);
 
 export default router;

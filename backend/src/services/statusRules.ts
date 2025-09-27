@@ -7,9 +7,4 @@ export const requestTransitions: Record<RequestStatus, RequestStatus[]> = {
   [RequestStatus.Cancelled]: [], 
 };
 
-export const deliveryTransitions: Record<DeliveryStatus, DeliveryStatus[]> = {
-  [DeliveryStatus.NotStarted]: [DeliveryStatus.InTransit, DeliveryStatus.Failed],
-  [DeliveryStatus.InTransit]: [DeliveryStatus.Delivered, DeliveryStatus.Failed],
-  [DeliveryStatus.Delivered]: [], 
-  [DeliveryStatus.Failed]: [], 
-};
+

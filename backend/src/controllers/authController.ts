@@ -40,6 +40,15 @@ export const registerUser = async (req: Request, res: Response) => {
     });
 
     if (user) {
+      await sendEmail({
+        to: process.env.EMAIL_USER!,
+        subject: "New Customer Signed Up",
+        text: `A new customer has signed up on the platform.
+Name: ${user.name}
+Email: ${user.email}
+Phone: ${user.phone}
+Role: ${user.role}`,
+      });
       return res.status(201).json({
         success: true,
         message: "User created successfully",
@@ -62,15 +71,15 @@ export const registerUser = async (req: Request, res: Response) => {
   } catch (error: any) {
 
     if (error.code === 11000 && error.keyValue) {
-    const field = Object.keys(error.keyValue)[0];
-    if (field) {
-      return res.status(400).json({
-        success: false,
-        message: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`,
-        data: null,
-      });
+      const field = Object.keys(error.keyValue)[0];
+      if (field) {
+        return res.status(400).json({
+          success: false,
+          message: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`,
+          data: null,
+        });
+      }
     }
-  }
     res.status(500).json({
       success: false,
       message: error.message || "Server error",
@@ -102,7 +111,16 @@ export const loginUser = async (req: Request, res: Response) => {
       });
     }
 
-    res.json({
+    await sendEmail({
+      to: process.env.EMAIL_USER!,
+      subject: "Customer Logged In",
+      text: `Customer logged in on the platform.
+Name: ${user.name}
+Email: ${user.email}
+Phone: ${user.phone}
+Role: ${user.role}`,
+    });
+    return res.json({
       success: true,
       message: "User logged in successfully",
       data: {

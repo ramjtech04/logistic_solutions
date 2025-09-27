@@ -39,7 +39,12 @@ export const createRequest = async (req: Request, res: Response) => {
     await sendEmail({
       to: process.env.EMAIL_USER!,
       subject: "New Delivery Request from Customer",
-      text: `Customer ${customer?.name} (${customer?.email}, ${customer?.phone}) created a new request.`,
+      text: `Customer created a new request.
+      Details:
+        Customer Name:${customer?.name}
+        Customer Email:${customer?.email}
+        Customer Contact:${customer?.phone}
+      `,
     });
 
     return res.status(201).json({ success: true, message: "Request created successfully", request: newRequest });
@@ -119,7 +124,13 @@ export const acceptRequest = async (req: Request, res: Response) => {
     await sendEmail({
       to: process.env.EMAIL_USER!,
       subject: "Request Accepted by Truck Owner",
-      text: `Truck Owner accepted Request ${request._id}`,
+      text: `Truck Owner accepted a Request
+      Important Details:
+- Request ID: ${request._id}
+- Customer: ${customer?.name} (${customer?.phone || "No phone"})
+- Truck Assigned: ${truck?.truckNumber || "Not assigned"} (${truck?.truckType || "N/A"})
+
+Please follow up accordingly.`,
     });
 
     return res.status(200).json({ success: true, request });
