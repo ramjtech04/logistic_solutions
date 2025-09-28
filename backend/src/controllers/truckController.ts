@@ -11,13 +11,21 @@ import Truck from "../models/truckModel";
 // ADD TRUCK
 export const addTruck = async (req: Request, res: Response) => {
   try {
-    const { truckNumber, truckType, capacity, state, city, fuelType } = req.body;
+    const { truckNumber, truckType, capacity, state, city, fuelType, truckOwnerId } = req.body;
 
     if (!req.user) {
       return res.status(401).json({ success: false, message: "Unauthorized", data: null });
     }
 
-    const truckOwnerId = new mongoose.Types.ObjectId(req.user.id);
+    let ownerIdToUse: string;
+    if (req.user.role === "admin") {
+      if (!truckOwnerId) {
+        return res.status(400).json({ success: false, message: "truckOwnerId is required for admin", data: null });
+      }
+      ownerIdToUse = truckOwnerId;
+    } else {
+      ownerIdToUse = req.user.id;
+    }
 
     // Check if truckNumber already exists
     const existingTruck = await Truck.findOne({ truckNumber });
@@ -32,7 +40,7 @@ export const addTruck = async (req: Request, res: Response) => {
       state,
       city,
       fuelType,
-      truckOwnerId,
+      truckOwnerId: ownerIdToUse,
     });
 
     res.status(201).json({ success: true, message: "Truck added successfully", data: truck });
