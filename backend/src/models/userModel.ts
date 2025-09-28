@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema, CallbackError } from "mongoose";
 
 //roles
 export type UserRole = "admin" | "truck_owner" | "customer";
@@ -51,6 +51,34 @@ const userSchema = new Schema<IUser>(
   },
   { timestamps: true }
 );
+
+userSchema.pre("deleteOne", { document: true, query: false }, async function (next) {
+  try {
+    const user = this as IUser;
+    if (user.role === "truck_owner") {
+      const Truck = (await import("./truckModel")).default;
+      await Truck.deleteMany({ truckOwnerId: user._id });
+    }
+    next();
+  } catch (err: unknown) {
+    next(err as CallbackError);
+  }
+});
+
+userSchema.pre("findOneAndDelete", async function (next) {
+  try {
+    const query = this.getFilter();
+    const user = await this.model.findOne(query) as IUser;
+    if (user?.role === "truck_owner") {
+      const Truck = (await import("./truckModel")).default;
+      await Truck.deleteMany({ truckOwnerId: user._id });
+    }
+    next();
+  } catch (err: unknown) {
+    next(err as CallbackError);
+  }
+});
+
 
 // Creating & exporting model
 const User = mongoose.model<IUser>("User", userSchema);
