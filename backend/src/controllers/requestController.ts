@@ -74,8 +74,8 @@ export const getMyRequests = async (req: Request, res: Response) => {
   }
 };
 
-//Get all pending requests for truck owners
-export const getAvailableRequests = async (req: Request, res: Response) => {
+//Get all requests with status "pending" 
+export const getPendingRequests = async (req: Request, res: Response) => {
   try {
     const requests = await RequestModel.find({ requestStatus: RequestStatus.Pending })
       .select("pickupState pickupCity pickupAddress dropState dropCity dropAddress loadType loadWeight createdAt");
@@ -87,7 +87,7 @@ export const getAvailableRequests = async (req: Request, res: Response) => {
   }
 };
 
-//Truck owner accepts a request
+//Truck owner accepts a request and assigns truck
 export const acceptRequest = async (req: Request, res: Response) => {
   try {
     const truckOwnerId = req.user?.id;
@@ -96,7 +96,14 @@ export const acceptRequest = async (req: Request, res: Response) => {
 
     if (!truckOwnerId) return res.status(401).json({ success: false, message: "Unauthorized" });
     if (!requestId) return res.status(400).json({ success: false, message: "Request ID is required" });
+    //Finding request
+    const request = await RequestModel.findById(requestId);
+    if (!request) return res.status(404).json({ success: false, message: "Request not found" });
 
+    if (request.requestStatus !== RequestStatus.Pending) {
+      await Truck.findByIdAndUpdate(truckId, { status: "available" });
+      return res.status(400).json({ success: false, message: "Request already accepted" });
+    }
     // Check truck availability
     const truck = await Truck.findOneAndUpdate(
       { _id: truckId, truckOwnerId, status: "available" },
@@ -105,14 +112,7 @@ export const acceptRequest = async (req: Request, res: Response) => {
     );
     if (!truck) return res.status(400).json({ success: false, message: "Invalid truck or truck busy" });
 
-    // Update request directly
-    const request = await RequestModel.findById(requestId);
-    if (!request) return res.status(404).json({ success: false, message: "Request not found" });
-
-    if (request.requestStatus !== RequestStatus.Pending) {
-      await Truck.findByIdAndUpdate(truckId, { status: "available" });
-      return res.status(400).json({ success: false, message: "Request already accepted" });
-    }
+    // Update request 
 
     request.requestStatus = RequestStatus.Accepted;
     request.acceptedByTruckOwnerId = truckOwnerId;
@@ -126,11 +126,11 @@ export const acceptRequest = async (req: Request, res: Response) => {
       subject: "Request Accepted by Truck Owner",
       text: `Truck Owner accepted a Request
       Important Details:
-- Request ID: ${request._id}
-- Customer: ${customer?.name} (${customer?.phone || "No phone"})
-- Truck Assigned: ${truck?.truckNumber || "Not assigned"} (${truck?.truckType || "N/A"})
+      - Request ID: ${request._id}
+      - Customer: ${customer?.name} (${customer?.phone || "No phone"})
+      - Truck Assigned: ${truck?.truckNumber || "Not assigned"} (${truck?.truckType || "N/A"})
 
-Please follow up accordingly.`,
+      Please follow up accordingly.`,
     });
 
     return res.status(200).json({ success: true, request });
@@ -140,7 +140,7 @@ Please follow up accordingly.`,
   }
 };
 
-//Get available trucks of logged-in truck owner
+//Get all available trucks of logged-in truck owner
 export const getMyAvailableTrucks = async (req: Request, res: Response) => {
   try {
     const truckOwnerId = req.user?.id;
