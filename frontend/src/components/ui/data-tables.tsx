@@ -34,6 +34,7 @@ import { exportToPdf } from "@/app/utils/exportToPdf"
 import { FaFileExcel } from "react-icons/fa";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select"
 import { FaFilePdf } from "react-icons/fa";
+import Link from "next/link"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -184,7 +185,7 @@ export function DataTable<TData, TValue>({
 </div>
 
 
-          <div className="flex items-center py-4">
+          <div className="flex items-center py-4 gap-1">
         
          <Input
          placeholder="Search"
@@ -198,7 +199,7 @@ export function DataTable<TData, TValue>({
 
          <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" >
               View
             </Button>
           </DropdownMenuTrigger>
@@ -224,6 +225,7 @@ export function DataTable<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+        <Button className="bg-black hover:bg-black text-white ml-auto"><Link href='/admin/Users/add-user'>Add </Link></Button>
       </div>
 
     <div className="overflow-hidden rounded-md border">   

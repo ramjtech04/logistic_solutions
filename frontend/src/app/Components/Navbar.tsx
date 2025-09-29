@@ -100,7 +100,7 @@ const Navbar = () => {
     <DropdownMenuLabel>My Account</DropdownMenuLabel>
     <DropdownMenuSeparator />
     <DropdownMenuItem onClick={()=>{router.push('/account/profile')}}>Profile</DropdownMenuItem>
-     {isrole && role && role == "truck_owner" && (   <DropdownMenuItem onClick={()=>{router.push('/trucks')}}>Trucks</DropdownMenuItem>)}
+     {isrole && role && role == "truck_owner" && ( <><DropdownMenuItem onClick={()=>{router.push('/trucks')}}>Trucks</DropdownMenuItem><DropdownMenuItem onClick={()=>{router.push('/trucks/Assign-Request')}}>Assign Delivery</DropdownMenuItem></>  )}
 
                  {isrole && role && role == "customer"&& (<DropdownMenuItem onClick={()=>{router.push('/Loadmanage/getloadRequest')}}>Loads Request</DropdownMenuItem>)}
         <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
@@ -138,6 +138,7 @@ const Navbar = () => {
   {isrole && role === "truck_owner" && (
     <>
       <li className="p-2 cursor-pointer" onClick={() => router.push('/trucks')}>Trucks</li>
+            <li className="p-2 cursor-pointer" onClick={() => router.push('/trucks/Assign-Request')}>Assign Delivery</li>
 
     </>
   )}

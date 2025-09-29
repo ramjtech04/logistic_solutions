@@ -32,6 +32,14 @@ export function SignUpForm({
     
   const url=process.env.NEXT_PUBLIC_URL_BASE;
       try {
+         Swal.fire({
+              title: "Please wait...",
+              text: "Submitting your request",
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading()
+              }
+            });
         const res = await fetch(url+"api/auth/register", {
           method: "POST",
           headers: {
@@ -44,7 +52,7 @@ export function SignUpForm({
        
       if(data.success){
       
- Swal.fire({
+await Swal.fire({
       title: data.success ? "Success" : "Error",
       text: data.message,
       icon: data.success ? "success":"error",
@@ -57,13 +65,14 @@ export function SignUpForm({
       setpassword("")
       setrole("")
       if(pathname.startsWith('/account/register')){
+      
        window.location.href = "/account/register";
       }
           
    
     })
       }else{
- Swal.fire({
+await Swal.fire({
       title: "Error",
       text: data.message,
       icon: "error",
@@ -74,7 +83,9 @@ export function SignUpForm({
         
        
       } catch (err) {
-     
+     alert(err)
+      }finally{
+         Swal.close();
       }
     };
   return (

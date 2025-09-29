@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import Link from "next/link";
-import { FaTrashAlt } from "react-icons/fa";
+import {  FaTrashAlt } from "react-icons/fa";
 
+import { FaFileInvoice } from "react-icons/fa";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -103,18 +104,50 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
         </Button>
       )
     },
-  } , {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }: any) => (
+  } ,
+  {
+  id: "actions",
+  cell: ({ row }) => {
+    const handleDelete = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("No token found");
+          return;
+        }else{
+               console.log(token);
+        }
+         const url=process.env.NEXT_PUBLIC_URL_BASE;
+
+   
+        const res = await fetch( `${url}api/admin/requests/delete/${row.original._id}`, {
+          method: "DElETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+     
+      alert("Deleted successfully!")
+      refreshTable()
+      // optional: refresh table or remove row from state
+    }
+
+    return (
+      <>
+      <button onClick={handleDelete} className="text-red-500 hover:text-red-700">
+        <FaTrashAlt size={16} />
+      </button>
       <Link
         href={`/admin/loads/${row.original._id}`}
-        className="text-blue-600 underline"
+        className="text-pink-600 hover:text-eye-800 underline"
       >
-        View
+      <FaFileInvoice />
       </Link>
-    ),
+      </>
+    )
   },
+}
+
 
 
 ]

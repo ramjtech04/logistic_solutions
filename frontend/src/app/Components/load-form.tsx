@@ -57,7 +57,7 @@ const handleSubmit  =  async(e: React.FormEvent) => {
         Swal.showLoading()
       }
     });
-        const res = await fetch(url+"api/requests/", {
+        const res = await fetch(url+"api/requests/create", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

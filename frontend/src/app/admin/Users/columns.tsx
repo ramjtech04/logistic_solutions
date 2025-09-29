@@ -3,7 +3,9 @@
 import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
-import { FaTrashAlt } from "react-icons/fa";
+import Link from "next/link";
+import { FaEye, FaTrashAlt, FaTruck } from "react-icons/fa";
+import { FaPen } from "react-icons/fa6";
 
 
 // This type is used to define the shape of our data.
@@ -14,7 +16,7 @@ export type User = {
   email: string
   phone:string
   createdAt:string
-  
+  role :string
 }
 
 export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
@@ -123,9 +125,24 @@ export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
     }
 
     return (
+      <>
       <button onClick={handleDelete} className="text-red-500 hover:text-red-700">
         <FaTrashAlt size={16} />
       </button>
+      <Link href={`/admin/Users/edit-user/Edit/${row.original._id}`} className="text-sky-500 hover:text-sky-700">
+        <FaPen size={16} />
+      </Link>
+      <Link href={`/admin/Users/edit-user/View/${row.original._id}`} className="text-pink-500 hover:text-pink-700">
+        <FaEye size={16} />
+      </Link>
+      
+      {row.original.role ==="truck_owner" &&(
+<Link   href={`/admin/Users/truck-owner/${row.original._id}`}  className="text-purple-500 hover:text-purple-700">
+        <FaTruck size={16} />
+      </Link>
+      )}
+       
+      </>
     )
   },
 }

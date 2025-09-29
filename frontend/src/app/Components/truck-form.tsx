@@ -35,38 +35,38 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { AppSidebar } from "@/components/ui/app-sidebar"
 import { Separator } from "@/components/ui/separator"
 
-const TruckForm = ({ id }: { id?: string }) => {
-
-      
-          const title = id==="add" ? "Add Truck" : "Edit Truck"
-          const urladd = id==="add" ? "api/trucks/" : "api/trucks/"+id
-          const method = id==="add" ? "POST" : "PUT"
-          const btn = id==="add" ? "Add Truck" : "Update Truck"
+const TruckForm = ({ id ,mode}: { id?: string,mode?:string }) => {
+const router =useRouter();
+                const title = mode === "add" ? "Add Truck" : mode === "edit"  ? "Edit Truck" : "Truck Details";
+          const urladd = mode==="add" ? "api/trucks/" : "api/trucks/updatetruck/"+id
+          const method = mode==="add" ? "POST" : "PUT"  
+          const btn = mode==="add" ? "Add Truck" : "Update Truck"
+       
      const[truckNumber ,setnumber]=useState("");
      const[truckType ,settrucktype]=useState("");
      const[capacity ,setcapacity]=useState("");
      const[city ,setcity]=useState("");
  const[state ,setstate]=useState("");
   const[fuelType ,setfueltype]=useState("");
-  const router =useRouter();
     const[truckOwnerId ,settruckOwnerId]=useState("");
+   
             const [data, setData] = useState<any[]>([]);
 const role =localStorage.getItem("role")
-console.log(role)
+
      const fetchData = async () => {
+    
         const token = localStorage.getItem("token");
       
         if (!token) return;
     const url=process.env.NEXT_PUBLIC_URL_BASE;
-        const res = await fetch(`${url}${urladd}`, {
+        const res = await fetch(`${url}api/trucks/fetchtruck/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
     
         const result = await res.json();
-      
-console.log(result.data.truckNumber+" "+result.data.truckType);
-console.log(result)
+        console.log(result)
 if (result?.data) {
+ 
     setnumber(result.data.truckNumber || "");
     settrucktype(result.data.truckType || "");
     setcapacity(result.data.capacity || "");
@@ -74,7 +74,8 @@ if (result?.data) {
     setcity(result.data.city || "");
     setfueltype(result.data.fuelType || "");
     settruckOwnerId(result.data.truckOwnerId|| "")
-    console.log(result.data.truckOwnerId|| "")
+  console.log(result.data.truckOwnerId||"")
+    
   }else{
     setnumber("")
  settrucktype("");
@@ -82,6 +83,7 @@ if (result?.data) {
     setstate("");
     setcity("");
     setfueltype("");
+  
 
   }
       };
@@ -99,18 +101,42 @@ if (result?.data) {
       
           const result = await res.json();
           console.log(result)
+          
           setData(result.data??"");
         };
     
-      useEffect(() => {
-        fetchData();
-        fetchTruckOwnerData();
-      }, []);
+  //     useEffect(() => {
+      
+  // if(mode ==="edit" || mode ==="view"){
+  // fetchData();
+  // }
+      
+  //         fetchTruckOwnerData();
+       
+          
+     
+  //     }, []);
+
+  useEffect(() => {
+  if (mode === "edit" || mode === "view") {
+    fetchData();
+  }
+  fetchTruckOwnerData();
+}, [id, mode]);
+  useEffect(() => {
+  if (mode === "add" && id) {
+    settruckOwnerId(id);
+  }
+}, [mode, id]);
+
+
+
 
 
 const handleSubmit  =  async(e: React.FormEvent) => {
     e.preventDefault();
     // Yahan par aap form data ko submit karne ka logic likh sakte hain
+ console.log(truckOwnerId);
  
      const url=process.env.NEXT_PUBLIC_URL_BASE;
       try {
@@ -132,6 +158,17 @@ const handleSubmit  =  async(e: React.FormEvent) => {
                   text: data.message,
                   icon: "success",
                   confirmButtonText: "OK",
+                 
+                }).then(()=>{
+                  if(mode==="add"){
+                   setnumber("")
+                settrucktype("");
+               setcapacity("");
+              setstate("");
+              setcity("");
+               setfueltype("");
+              settruckOwnerId("")
+                  }
                  
                 })
         }else{
@@ -158,9 +195,11 @@ const handleSubmit  =  async(e: React.FormEvent) => {
     settrucktype("")
     setstate("")
     setcity("")
+    settruckOwnerId("")
  }
 
  const renderForm  =()=>(
+ 
     <form onSubmit={handleSubmit}>
         <Card className="w-full border-0 shadow-none ">
                 
@@ -168,7 +207,7 @@ const handleSubmit  =  async(e: React.FormEvent) => {
          <CardHeader className="text-center">
         <CardTitle className="text-2xl">{title}</CardTitle>
         
-        <CardDescription>{title} information</CardDescription>
+        <CardDescription>{title} information  {truckOwnerId}</CardDescription>
       </CardHeader>
       <CardContent>
 
@@ -180,14 +219,15 @@ const handleSubmit  =  async(e: React.FormEvent) => {
                 {role == "admin" ? (<>
                  <div className="flex flex-col  gap-3">
                 <Label htmlFor="text">Truck Owner </Label>
-                   <Select required value={truckOwnerId} onValueChange={(value) => settruckOwnerId(value)}  disabled={id ==="add"?false:true}  >
+           
+                   <Select required value={truckOwnerId} onValueChange={(value) => settruckOwnerId(value)}       disabled={( mode =="view" || mode =="edit") ?true:false}    >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select Truck Owner" />
              </SelectTrigger>
                 <SelectContent>
-                  {data.map((trucks)=>(
+                  {data.map((trucksOwner)=>(
 
-                     <SelectItem key={trucks._id} value={String(trucks._id)} >{trucks.name}- {trucks.phone}</SelectItem>
+                     <SelectItem key={trucksOwner._id} value={String(trucksOwner._id)} >{trucksOwner.name}- {trucksOwner.phone}</SelectItem>
                   ))}
              
                </SelectContent>
@@ -206,7 +246,7 @@ const handleSubmit  =  async(e: React.FormEvent) => {
               <div className="flex flex-col  gap-3">
                 <Label htmlFor="name">Truck Number</Label>
                 <Input id="number" type="text" placeholder="Enter Truck number (e.g., MH12AB1234)"  
-                value={truckNumber}  
+                value={truckNumber}  disabled={(mode =="view") ?true:false} 
                 onChange={(e) => setnumber(e.target.value)} required/>
               </div>
 
@@ -217,7 +257,9 @@ const handleSubmit  =  async(e: React.FormEvent) => {
 
               <div className="flex flex-col  gap-3">
                 <Label htmlFor="text">Truck Type</Label>
-    <Select required value={truckType} onValueChange={(value) => settrucktype(value)}>
+    <Select required value={truckType} onValueChange={(value) => settrucktype(value)}
+      disabled={( mode =="view") ?true:false}
+      >
   <SelectTrigger className="w-full">
     <SelectValue placeholder="Select TruckType" />
   </SelectTrigger>
@@ -232,11 +274,15 @@ const handleSubmit  =  async(e: React.FormEvent) => {
 
               <div className="flex flex-col  gap-3">
                 <Label htmlFor="capacity">Capacity</Label>
-                <Input id="capacity" placeholder="eg 10,20,30" value={capacity}   onChange={(e) => setcapacity(e.target.value)} required/>
+                <Input id="capacity" placeholder="eg 10,20,30" value={capacity}   onChange={(e) => setcapacity(e.target.value)} required
+                disabled={(mode =="view") ?true:false}
+                />
               </div>
                <div className="flex flex-col  gap-3">
                 <Label htmlFor="fulltype">FuelType</Label>
-                 <Select required value={fuelType} onValueChange={(value) => setfueltype(value)}>
+                 <Select required value={fuelType} onValueChange={(value) => setfueltype(value)}
+                  disabled={( mode =="view") ?true:false}
+                  >
   <SelectTrigger className="w-full">
     <SelectValue placeholder="Select FullType" />
   </SelectTrigger>
@@ -251,11 +297,11 @@ const handleSubmit  =  async(e: React.FormEvent) => {
               </div>
               <div className="flex flex-col  gap-3">
                 <Label htmlFor="state">state</Label>
-                <Input id="state" placeholder="state" value={state}  onChange={(e) => setstate(e.target.value)}  required/>
+                <Input id="state" placeholder="state" value={state}  onChange={(e) => setstate(e.target.value)}  required disabled={( mode =="view") ?true:false}/>
               </div>
               <div className="flex flex-col  gap-3">
                 <Label htmlFor="city">City</Label>
-                <Input id="city" placeholder="city" value={city}  onChange={(e) => setcity(e.target.value)}  required/>
+                <Input id="city" placeholder="city" value={city}  onChange={(e) => setcity(e.target.value)}  required disabled={( mode =="view") ?true:false} />
               </div>
             
                
@@ -267,8 +313,8 @@ const handleSubmit  =  async(e: React.FormEvent) => {
       </CardContent>
 
       <CardFooter className="flex justify-end">
-        <Button className="px-6 me-2" >{btn}</Button>
-        {id ==="add" && <Button className="px-6 bg-sky-500 hover:bg-sky-800 text-white me-2" onClick={handleClear} >clear</Button>} 
+      {(mode =="add" || mode =="edit") && (<> <Button className="px-6 me-2" >{btn}</Button></>) } 
+        {mode ==="add" && <Button className="px-6 bg-sky-500 hover:bg-sky-800 text-white me-2" onClick={handleClear} >clear</Button>} 
        
       </CardFooter>
       
@@ -281,6 +327,11 @@ const handleSubmit  =  async(e: React.FormEvent) => {
    
 {role =="truck_owner" ? (<> 
 <Navbar />
+<div className='h-[200px] md:h-[300px] bg-red-800 text-white bg-center flex flex-col items-center justify-center' style={{backgroundImage:'url(/b1.jpg)'}} >
+        <h1 className=' text-2xl sm:text-5xl font-bold mb-2'>Your Trucks</h1>
+        <p className='text-sm text-center'>Organize and manage your Truck efficiently to keep operations running smoothly.</p>
+ 
+    </div>
   <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
