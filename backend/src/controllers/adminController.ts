@@ -17,6 +17,7 @@ export const getAllRequests = async (req: Request, res: Response) => {
       .populate("customerId", "name email phone")
       .populate("acceptedByTruckOwnerId", "name email phone")
       .populate("acceptedTruckId", "truckNumber truckType capacity")
+      .populate("assignedTruckId", "truckNumber truckType capacity")
       .populate("approvedByAdminId", "name email");
 
     return res.status(200).json({ success: true, requests });
