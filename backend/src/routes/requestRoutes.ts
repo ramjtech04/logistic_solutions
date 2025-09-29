@@ -20,5 +20,4 @@ router.get("/available", verifyToken, authorizeRoles(["truck_owner","admin"]), g
 router.post("/accept/:id", verifyToken, authorizeRoles(["truck_owner"]), acceptRequest);
 //fetch only logged in customer status=available trucks
 router.get("/my-available", verifyToken, authorizeRoles(["truck_owner"]),getMyAvailableTrucks);
-
 export default router;

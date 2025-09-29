@@ -177,29 +177,36 @@ export const rejectRequest = async (req: Request, res: Response) => {
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
+
+
+
+
 //Manual Assignment
-// Manual assignment of a truck by admin
 export const manualAssignRequest = async (req: Request, res: Response) => {
   try {
     const adminId = req.user?.id;
     const { requestId, truckId, truckOwnerId } = req.body;
 
-    if (!adminId) return res.status(401).json({ success: false, message: "Unauthorized" });
+    if (!adminId)
+      return res.status(401).json({ success: false, message: "Unauthorized" });
     if (!requestId || !truckId)
       return res.status(400).json({ success: false, message: "Request ID and Truck ID required" });
 
     const request = await RequestModel.findById(requestId);
-    if (!request) return res.status(404).json({ success: false, message: "Request not found" });
+    if (!request)
+      return res.status(404).json({ success: false, message: "Request not found" });
 
     const truck = await Truck.findOne({ _id: truckId, status: "available" });
-    if (!truck) return res.status(400).json({ success: false, message: "Truck not available" });
+    if (!truck)
+      return res.status(400).json({ success: false, message: "Truck not available" });
 
     // Assign truck
     request.assignedTruckId = truck._id as mongoose.Types.ObjectId;
 
     // Assign truck owner if provided
     if (truckOwnerId) {
-      if (typeof truckOwnerId === "string" && mongoose.Types.ObjectId.isValid(truckOwnerId)) {
+      if (mongoose.Types.ObjectId.isValid(truckOwnerId)) {
         request.acceptedByTruckOwnerId = new mongoose.Types.ObjectId(truckOwnerId);
       } else {
         return res.status(400).json({ success: false, message: "Invalid truckOwnerId" });
@@ -215,16 +222,33 @@ export const manualAssignRequest = async (req: Request, res: Response) => {
     truck.status = "busy";
     await truck.save();
 
-    // Populate for email content
-    await request.populate("customerId", "name email phone");
-    await request.populate("acceptedByTruckOwnerId", "name email phone");
-    await request.populate("assignedTruckId", "truckNumber truckType capacity");
+    // Populate only required fields for frontend
+    const populatedRequest = await RequestModel.findById(request._id)
+      .populate("customerId", "name email phone")
+      .populate("acceptedByTruckOwnerId", "name email phone")
+      .populate("assignedTruckId", "truckNumber truckType capacity")
+      .populate("approvedByAdminId", "name email");
 
-    const customer: any = request.customerId;
-    const truckOwner: any = request.acceptedByTruckOwnerId;
-    const assignedTruck: any = request.assignedTruckId;
+    if (!populatedRequest) {
+      return res.status(500).json({ success: false, message: "Request not found after saving" });
+    }
+    // Prepare frontend-friendly response
+    const responseData = {
+      _id: populatedRequest?._id,
+      requestStatus: populatedRequest?.requestStatus,
+      customer: populatedRequest?.customerId,
+      truckOwner: populatedRequest?.acceptedByTruckOwnerId,
+      truck: populatedRequest?.assignedTruckId,
+      approvedByAdmin: populatedRequest?.approvedByAdminId,
+      createdAt: populatedRequest?.createdAt,
+      updatedAt: populatedRequest?.updatedAt,
+    };
 
     // Email to customer
+    const customer: any = populatedRequest?.customerId;
+    const truckOwner: any = populatedRequest?.acceptedByTruckOwnerId;
+    const assignedTruck: any = populatedRequest?.assignedTruckId;
+
     if (customer?.email) {
       await sendEmail({
         to: customer.email,
@@ -236,13 +260,12 @@ Details:
 - Truck Assigned: ${assignedTruck?.truckNumber || "Not Assigned"} (${assignedTruck?.truckType || "N/A"})
 - Truck Owner: ${truckOwner?.name || "Not assigned"}
 - Contact: ${truckOwner?.phone || "Not available"}
-- Request ID: ${request._id}
+- Request ID: ${populatedRequest._id}
 
 Our team will contact you soon for further updates.`,
       });
     }
 
-    // Email to truck owner
     if (truckOwner?.email) {
       await sendEmail({
         to: truckOwner.email,
@@ -254,31 +277,32 @@ Details:
 - Customer: ${customer?.name || "Not available"}
 - Contact: ${customer?.phone || "Not available"}
 - Truck Assigned: ${assignedTruck?.truckNumber || "Not defined"} (${assignedTruck?.truckType || "N/A"})
-- Request ID: ${request._id}
+- Request ID: ${populatedRequest._id}
 
 Please coordinate with the customer to proceed further.`,
       });
     }
 
-    return res.status(200).json({ success: true, request });
+    return res.status(200).json({ success: true, request: responseData });
   } catch (error: any) {
     console.error("Error in manual assignment:", error.message);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
 // Delete a request
 export const deleteRequest = async (req: Request, res: Response) => {
   try {
     const adminId = req.user?.id;
     const requestId = req.params.id;
 
-    if (!adminId) 
+    if (!adminId)
       return res.status(401).json({ success: false, message: "Unauthorized" });
-    if (!requestId) 
+    if (!requestId)
       return res.status(400).json({ success: false, message: "Request ID is required" });
 
     const request = await RequestModel.findById(requestId);
-    if (!request) 
+    if (!request)
       return res.status(404).json({ success: false, message: "Request not found" });
 
     // Delete the request
