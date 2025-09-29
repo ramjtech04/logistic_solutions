@@ -1,7 +1,8 @@
-// controllers/deliveryController.ts
 import { Request, Response } from "express";
 import RequestModel from "../models/requestModel";
+import Truck from "../models/truckModel"; 
 import { Types } from "mongoose";
+import { DeliveryStatus } from "../enums/statusEnums";
 
 /**
  * Update delivery status (Admin or Truck Owner)
@@ -31,7 +32,12 @@ export const updateDeliveryStatus = async (req: Request, res: Response) => {
     // Just update the delivery status directly
     request.deliveryStatus = status;
     await request.save();
-
+    if (status === DeliveryStatus.Delivered) {
+    const truckId = request.assignedTruckId || request.acceptedTruckId;
+    if (truckId) {
+    await Truck.findByIdAndUpdate(truckId, { status: "available" });
+  }
+}
     return res.status(200).json({ success: true, request });
   } catch (error: any) {
     console.error("Error updating delivery status:", error.message);
@@ -80,8 +86,8 @@ export const getDeliveryStatus = async (req: Request, res: Response) => {
     const request: any = await RequestModel.findById(requestId)
       .populate("customerId", "name email phone")
       .populate("acceptedByTruckOwnerId", "name email phone")
-      .populate("acceptedTruckId", "truckNumber truckType capacity");
-
+      .populate("acceptedTruckId", "truckNumber truckType capacity")
+      .populate("assignedTruckId","truckNumber truckType capacity");
     if (!request) {
       return res.status(404).json({ success: false, message: "Request not found" });
     }

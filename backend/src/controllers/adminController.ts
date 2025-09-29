@@ -228,7 +228,7 @@ export const manualAssignRequest = async (req: Request, res: Response) => {
       .populate("acceptedByTruckOwnerId", "name email phone")
       .populate("assignedTruckId", "truckNumber truckType capacity")
       .populate("approvedByAdminId", "name email");
-
+      
     if (!populatedRequest) {
       return res.status(500).json({ success: false, message: "Request not found after saving" });
     }
