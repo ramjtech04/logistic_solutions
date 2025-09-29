@@ -55,7 +55,8 @@ export const getMyDeliveries = async (req: Request, res: Response) => {
       acceptedByTruckOwnerId: truckOwnerId,
     })
       .populate("customerId", "name email phone")
-      .populate("acceptedTruckId", "truckNumber truckType capacity");
+      .populate("acceptedTruckId", "truckNumber truckType capacity")
+      .populate("assignedTruckId","truckNumber truckType capacity")
 
     return res.status(200).json({ success: true, deliveries });
   } catch (error: any) {
