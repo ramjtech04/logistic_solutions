@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import Link from "next/link";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaEye, FaTrashAlt } from "react-icons/fa";
 import { FaPen, FaUsersViewfinder } from "react-icons/fa6";
 
 
@@ -16,12 +16,10 @@ export type Trucks = {
   truckNumber:string;
   truckType: string;
   capacity:string;
-  state:string;
   city:string;
   fuelType?:string;
   status?:string;
-
-  
+ createdAt:string
 
  
   
@@ -51,7 +49,7 @@ export const columns=(refreshTable: () => void): ColumnDef<Trucks>[] => [
      cell: ({ row }) => {
   
       return  <Link
-      href={`/trucks/${row.original._id}`} 
+      href={`/trucks/view/${row.original._id}`} 
       className="text-blue-600 hover:underline"
     >
       {row.original.truckNumber}
@@ -87,20 +85,7 @@ export const columns=(refreshTable: () => void): ColumnDef<Trucks>[] => [
     },
  
   },
-    {
-    accessorKey: "state",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          State
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    },
+    
         {
     accessorKey: "city",
      header: ({ column }) => {
@@ -123,12 +108,30 @@ export const columns=(refreshTable: () => void): ColumnDef<Trucks>[] => [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          fuelType
+          Fuel
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
     },
+    {
+    accessorKey:"createdAt",
+     header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Created At
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+    const date = new Date(row.original.createdAt);
+    return date.toLocaleString(); // e.g. 24/09/2025, 10:30:45 AM
+  }
+  },
      
     {
         accessorKey: "status",
@@ -159,7 +162,7 @@ export const columns=(refreshTable: () => void): ColumnDef<Trucks>[] => [
                console.log(token);
         }
  const url=process.env.NEXT_PUBLIC_URL_BASE;
-        const res = await fetch(`${url}api/trucks/${row.original._id}`, {
+        const res = await fetch(`${url}api/trucks/deletetruck/${row.original._id}`, {
           method: "DElETE",
           headers: {
             "Content-Type": "application/json",
@@ -180,9 +183,12 @@ export const columns=(refreshTable: () => void): ColumnDef<Trucks>[] => [
         <FaTrashAlt size={16} />
       </button>
       
-     
-         <Link href={`/trucks/${row.original._id}`} className="text-sky-500 hover:text-sky-700">
+         <Link href={`/trucks/edit/${row.original._id}`} className="text-sky-500 hover:text-sky-700">
         <FaPen size={16} />
+      </Link>
+      
+      <Link href={`/trucks/view/${row.original._id}`} className="text-pink-500 hover:text-pink-700">
+        <FaEye size={16} />
       </Link>
        
       

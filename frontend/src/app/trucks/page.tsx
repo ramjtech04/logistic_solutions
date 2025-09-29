@@ -47,7 +47,7 @@ const Truckspage = () => {
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb> 
-       <Button variant="outline" onClick={()=>router.push('/trucks/add')}>Add Truck</Button>
+       <Button  onClick={()=>router.push('/trucks/add/add')} className='mb-2 bg-black text-white hover:text-black'>Add Truck</Button>
       <TrucksTableForm/>
 </div>
     

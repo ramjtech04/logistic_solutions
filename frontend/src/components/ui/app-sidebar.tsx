@@ -71,7 +71,7 @@ const data = {
       items: [
          {
           title: "Add Trucks",
-          url: "/trucks/add",
+          url: "/trucks/add/add",
         },
         {
           title: "List Trucks",
@@ -88,12 +88,28 @@ const data = {
       
         {
           title: "All Loads",
-          url: "/admin/loads",
+          url: "/admin/loads/loadrequest/all",
+        },
+         {
+          title: "Pending Loads",
+          url: "/admin/loads/loadrequest/pending",
         },
         {
-          title: "Manage Requests",
-          url: "/admin/loads/loadrequest",
-        }
+          title: "Accepted Loads",
+          url: "/admin/loads/loadrequest/accepted",
+        },
+        {
+          title: "Approved Loads",
+          url: "/admin/loads/loadrequest/approved",
+        },
+        {
+          title: "Cancelled Loads",
+          url: "/admin/loads/loadrequest/cancelled",
+        },
+         {
+          title: "Completed Loads",
+          url: "/admin/loads/loadrequest/completed",
+        },
        
       ],
     },

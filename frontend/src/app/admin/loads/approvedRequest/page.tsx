@@ -60,13 +60,13 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbSeparator className="" />
                 <BreadcrumbItem>
                   <BreadcrumbLink href="/admin/loads">Loads</BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbSeparator className="" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Manage Request</BreadcrumbPage>
+                  <BreadcrumbPage>Appected Request</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

@@ -26,6 +26,14 @@ export function LoginForm({
       
 const url=process.env.NEXT_PUBLIC_URL_BASE;
     try {
+       Swal.fire({
+                    title: "Please wait...",
+                    text: "Submitting your request",
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                      Swal.showLoading()
+                    }
+                  });
       const res = await fetch(url+"api/auth/login", {
         method: "POST",
         headers: {
@@ -37,7 +45,7 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
       const data = await res.json();
    console.log(data)
    if(data.success){
-   Swal.fire({
+   await   Swal.fire({
       title: data.success ? "Success" : "Error",
       text: data.message,
       icon: data.success ? "success":"error",
@@ -49,6 +57,7 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
       localStorage.setItem("role", data.data.role);
         localStorage.setItem("userId", data.data.id);
       if (data.data.role === "admin") {
+       
         router.push("/admin/dashboard");
       } else {
        
@@ -56,10 +65,11 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
       }
     })
    }else{
-    Swal.fire({
+ await   Swal.fire({
       title: "Error",
       text: data.message,
       icon: "error",
+    
     })
    }
     
@@ -70,7 +80,10 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
       // }
      
     } catch (err) {
-   
+   alert(err)
+    }
+    finally{
+         Swal.close();
     }
   };
 
