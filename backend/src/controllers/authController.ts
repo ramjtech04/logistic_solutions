@@ -39,16 +39,21 @@ export const registerUser = async (req: Request, res: Response) => {
       role,
     });
 
-    if (user) {
+    // send email only if role is customer or truck_owner
+    if (user && (user.role === "customer" || user.role === "truck_owner")) {
       await sendEmail({
         to: process.env.EMAIL_USER!,
-        subject: "New Customer Signed Up",
-        text: `A new customer has signed up on the platform.
+        subject: "New User Signed Up",
+        text: `A new user has signed up on the platform.
 Name: ${user.name}
 Email: ${user.email}
 Phone: ${user.phone}
 Role: ${user.role}`,
       });
+    }
+
+    //Response
+    if (user) {
       return res.status(201).json({
         success: true,
         message: "User created successfully",
@@ -69,7 +74,6 @@ Role: ${user.role}`,
       });
     }
   } catch (error: any) {
-
     if (error.code === 11000 && error.keyValue) {
       const field = Object.keys(error.keyValue)[0];
       if (field) {
@@ -87,6 +91,12 @@ Role: ${user.role}`,
     });
   }
 };
+
+
+
+
+
+
 
 // Login User
 export const loginUser = async (req: Request, res: Response) => {
@@ -111,15 +121,20 @@ export const loginUser = async (req: Request, res: Response) => {
       });
     }
 
-    await sendEmail({
-      to: process.env.EMAIL_USER!,
-      subject: "Customer Logged In",
-      text: `Customer logged in on the platform.
+    // send email only if role is customer or truck_owner
+    if (user.role === "customer" || user.role === "truck_owner") {
+      await sendEmail({
+        to: process.env.EMAIL_USER!,
+        subject: "User Logged In",
+        text: `User logged in on the platform.
 Name: ${user.name}
 Email: ${user.email}
 Phone: ${user.phone}
 Role: ${user.role}`,
-    });
+      });
+    }
+
+    // always return success response
     return res.json({
       success: true,
       message: "User logged in successfully",
@@ -140,6 +155,8 @@ Role: ${user.role}`,
     });
   }
 };
+
+
 //FORGOT PASSWORD (OTP)
 export const forgotPassword = async (req: Request, res: Response) => {
   try {
