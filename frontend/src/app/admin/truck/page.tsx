@@ -1,5 +1,8 @@
+"use client"
+// import TrucksTableForm from "@/app/trucks/truck-table-form";
+import dynamic from "next/dynamic";
 
-import TrucksTableForm from "@/app/trucks/truck-table-form";
+const TrucksTableForm = dynamic(() => import("@/app/trucks/truck-table-form"), { ssr: false })
 import { AppSidebar } from "@/components/ui/app-sidebar";
 import {
   Breadcrumb,
@@ -16,10 +19,20 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
 
 export default function AdminTruckPage() {
- 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null; // or a loader
+  }
  return (
     <SidebarProvider>
       <AppSidebar />
@@ -34,13 +47,12 @@ export default function AdminTruckPage() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
+                  <BreadcrumbLink  asChild >
+                  <Link href="/admin/dashboard">Dashboard</Link>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Users</BreadcrumbPage>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbSeparator  />
+               
                 <BreadcrumbItem>
                   <BreadcrumbPage>Trucks</BreadcrumbPage>
                 </BreadcrumbItem>

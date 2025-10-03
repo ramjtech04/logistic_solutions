@@ -29,15 +29,15 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import Navbar from "./Navbar"
+import dynamic from "next/dynamic";
+const Navbar = dynamic(() => import('@/app/Components/Navbar'), { ssr: false });
+const AppSidebar = dynamic(() => import("@/components/ui/app-sidebar").then(mod => mod.AppSidebar), { ssr: false });
+const Separator = dynamic(() => import("@/components/ui/separator").then(mod => mod.Separator), { ssr: false });
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/ui/app-sidebar"
-import { Separator } from "@/components/ui/separator"
-
+// import { AppSidebar } from "@/components/ui/app-sidebar"
 const TruckForm = ({ id ,mode}: { id?: string,mode?:string }) => {
-const router =useRouter();
-                const title = mode === "add" ? "Add Truck" : mode === "edit"  ? "Edit Truck" : "Truck Details";
+
+         const title = mode === "add" ? "Add Truck" : mode === "edit"  ? "Edit Truck" : "Truck Details";
           const urladd = mode==="add" ? "api/trucks/" : "api/trucks/updatetruck/"+id
           const method = mode==="add" ? "POST" : "PUT"  
           const btn = mode==="add" ? "Add Truck" : "Update Truck"
@@ -74,7 +74,6 @@ if (result?.data) {
     setcity(result.data.city || "");
     setfueltype(result.data.fuelType || "");
     settruckOwnerId(result.data.truckOwnerId|| "")
-  console.log(result.data.truckOwnerId||"")
     
   }else{
     setnumber("")
@@ -105,17 +104,7 @@ if (result?.data) {
           setData(result.data??"");
         };
     
-  //     useEffect(() => {
-      
-  // if(mode ==="edit" || mode ==="view"){
-  // fetchData();
-  // }
-      
-  //         fetchTruckOwnerData();
-       
-          
-     
-  //     }, []);
+
 
   useEffect(() => {
   if (mode === "edit" || mode === "view") {
@@ -335,14 +324,16 @@ const handleSubmit  =  async(e: React.FormEvent) => {
   <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="/">Home</Link>
+          <BreadcrumbLink asChild >
+          <Link href="/">Home</Link>
+               
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="/trucks">Trucks</Link>
+          <BreadcrumbLink asChild >
+             
+            <Link href="/trucks" >Trucks</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
@@ -367,8 +358,8 @@ const handleSubmit  =  async(e: React.FormEvent) => {
              <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="/">Home</Link>
+          <BreadcrumbLink  asChild>
+             <Link href="/admin/dashboard"> Dashboard</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
@@ -390,7 +381,7 @@ const handleSubmit  =  async(e: React.FormEvent) => {
      
       <div className='container mx-auto my-10 text-end'>
 
-          {/* <TruckForm id={truckid}/> */}
+        
      {renderForm()}
             
    </div> 

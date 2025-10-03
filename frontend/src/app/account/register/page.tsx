@@ -1,4 +1,11 @@
-import { SignUpForm } from '@/app/Components/sign-up'
+// import { SignUpForm } from '@/app/Components/sign-up'
+"use client"
+import dynamic from "next/dynamic";
+import Image from 'next/image'
+const SignUpForm = dynamic(
+  () => import('@/app/Components/sign-up').then(mod => mod.SignUpForm),
+  { ssr: false, loading: () => <p>Loading form...</p> }
+);
 import Link from 'next/link'
 import React from 'react'
 
@@ -11,12 +18,14 @@ const SignUppage = () => {
         <div className="flex  gap-2 justify-center md:justify-start">
             <Link href="/" className=" flex items-center ">
                   
-                     <img
-                    src="/v1.jpg"
-                    alt="Image"
-                    className=" h-[25px]   sm:h-[25px] mr-2"
-                    
-                  />
+                <Image
+                            src="/v1.jpg"
+                            alt="Logo"
+                            width={25}
+                            height={25}
+                            priority
+                            className="mr-2"
+                          />
                  <span className="text-sm font-bold text-dark-600 ">LOGISTIC</span><span className=" text-sm  text-dark-600">SOLUTION</span>
                  
                   </Link>
@@ -28,11 +37,13 @@ const SignUppage = () => {
         </div>
       </div>
       <div className="bg-muted relative hidden lg:block">
-        <img
-          src="/truckimg.jpg"
-          alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
+         <Image
+                  src="/truckimg.jpg"
+                  alt="Truck Image"
+                  fill
+                  className="object-cover dark:brightness-[0.2] dark:grayscale"
+                  priority
+                />
       </div>
     </div>
   </>

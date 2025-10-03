@@ -21,6 +21,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { User } from "../columns";
+import Link from "next/link";
 
 export default function TruckOwnerListPage() {
   const [data, setData] = useState<User[]>([]);
@@ -56,7 +57,9 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
+                  <BreadcrumbLink asChild>
+                  <Link href="/admin/dashboard">Dashboard</Link>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>

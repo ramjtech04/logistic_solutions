@@ -1,6 +1,9 @@
 "use client";
 
-import Navbar from "@/app/Components/Navbar";
+// import Navbar from "@/app/Components/Navbar";
+import dynamic from "next/dynamic";
+// dynamic import
+const Navbar = dynamic(() => import('@/app/Components/Navbar'), { ssr: false });
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +12,7 @@ import { useRouter } from "next/navigation";
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import Swal from 'sweetalert2';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import Link from "next/link";
 interface FormData {
  
   pickupcity: string;
@@ -192,7 +196,9 @@ setSelectedTruck("")
       <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="">
-                  <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                  <BreadcrumbLink  asChild>
+                  <Link href="/">Home</Link>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="" />
                 <BreadcrumbItem>

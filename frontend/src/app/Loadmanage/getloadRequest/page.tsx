@@ -22,7 +22,7 @@ export default function GetLoadRequestPage() {
     if (!token) return;
 const url=process.env.NEXT_PUBLIC_URL_BASE;
 
-    const res = await fetch(`${url}api/requests/my`, {
+    const res = await fetch(`${url}api/requests/my-requests`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

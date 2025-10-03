@@ -56,6 +56,7 @@ const [selectedTruck, setSelectedTruck] = useState<string>("");
     });
 
     const result = await res.json();
+    console.log("data is"+ result);
     setData(result.requests);
     setLoading(false);
   };
@@ -67,7 +68,7 @@ const [selectedTruck, setSelectedTruck] = useState<string>("");
   if (loading) return <p className="p-6">Loading...</p>;
 
   const singleRequest = data.find((req) => req._id === lslug);
-console.log(singleRequest)
+
   if (!singleRequest) {
     return <p className="p-6">No request found with ID: {lslug}</p>;
   }
@@ -110,7 +111,7 @@ console.log(singleRequest)
             
           }).then(() => {
 setStatus(updatedRequest.requestStatus);
-router.push('/admin/loads')
+router.push('/admin/loads/loadrequest/approved')
           })
     
        // assuming your API returns the updated request
@@ -179,7 +180,8 @@ const handleReject = async()=>{
             
           }).then(() => {
 setStatus(updatedRequest.requestStatus);
-router.push('/admin/loads')
+
+router.push('/admin/loads/loadrequest/cancelled')
           })
     
        // assuming your API returns the updated request
@@ -294,6 +296,7 @@ try{
         });
 
     const result = await res.json();
+    console.log("manual Assing data",result);
    if(result.success){
   
      Swal.fire({
@@ -308,6 +311,7 @@ Swal.close();
 // setShowTruckModal(false);
        fetchData(); 
       // setFilteredData([]); 
+      router.push('/admin/loads/loadrequest/approved')
       
         })
    }else{
@@ -345,7 +349,7 @@ Swal.close();
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbLink href="/admin/loads">Loads</BreadcrumbLink>
+                  <BreadcrumbLink href="/admin/loads/loadrequest/all">Loads</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
@@ -411,9 +415,10 @@ Swal.close();
                 <p><span className="font-medium">Name:</span> {singleRequest.acceptedByTruckOwnerId?.name}</p>
                 <p><span className="font-medium">Email:</span> {singleRequest.acceptedByTruckOwnerId?.email}</p>
                 <p><span className="font-medium">Phone:</span> {singleRequest.acceptedByTruckOwnerId?.phone}</p>
-               <p className="font-medium">Truck Details :{singleRequest?.acceptedTruckId?.truckNumber}</p>
-                <p><span className="font-medium">Type:</span> {singleRequest?.acceptedTruckId?.truckType}</p>
-                <p><span className="font-medium">capacity:</span> {singleRequest?.acceptedTruckId?.capacity} </p>
+               {/* <p className="font-medium">Truck Details :{singleRequest?.acceptedTruckId?.truckNumber}</p> */}
+                        <p className="font-medium">Truck Details :{singleRequest?.assignedTruckId?.truckNumber || singleRequest?.acceptedTruckId?.truckNumber}</p>
+                <p><span className="font-medium">Type:</span> {singleRequest?.assignedTruckId?.truckType || singleRequest?.acceptedTruckId?.truckType}</p>
+                <p><span className="font-medium">capacity:</span> {singleRequest?.assignedTruckId?.capacity || singleRequest?.acceptedTruckId?.capacity} </p>
                 </div>
 
               

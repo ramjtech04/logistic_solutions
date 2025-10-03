@@ -2,25 +2,15 @@
 
 import * as React from "react"
 import {
-  BookOpen,
-  Bot,
+  
   Boxes,
   Command,
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
-  Settings2,
-  SquareTerminal,
-  
-  TruckElectric,
-  
+   TruckElectric,
   Users2,
 } from "lucide-react"
 
 import { NavMain } from "@/components/ui/nav-main"
-import { NavProjects } from "@/components/ui/nav-projects"
+
 import { NavSecondary } from "@/components/ui/nav-secondary"
 import { NavUser } from "@/components/ui/nav-user"
 import {
@@ -103,12 +93,18 @@ const data = {
           url: "/admin/loads/loadrequest/approved",
         },
         {
-          title: "Cancelled Loads",
-          url: "/admin/loads/loadrequest/cancelled",
+          title: "InTransit Loads",
+          url: "/admin/loads/loadrequest/InTransit",
+        }, {
+          title: "Not Start Delivered Loads",
+          url: "/admin/loads/loadrequest/notstarted",
         },
          {
-          title: "Completed Loads",
-          url: "/admin/loads/loadrequest/completed",
+          title: "Delivered Loads",
+          url: "/admin/loads/loadrequest/delivered",
+        },{
+          title: "Cancelled Loads",
+          url: "/admin/loads/loadrequest/cancelled",
         },
        
       ],
@@ -125,6 +121,16 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Prevent SSR/CSR mismatch
+  if (!mounted) {
+    return null
+  }
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>

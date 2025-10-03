@@ -1,11 +1,8 @@
 "use client"
-
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Trucks } from './columns'
-
 import * as ColumnsModule from "./columns";
 import {  DataTables } from './data-table'
-
 
 const TrucksTableForm = () => {
       const [data, setData] = useState<Trucks[]>([]);
@@ -29,7 +26,8 @@ const TrucksTableForm = () => {
         fetchData();
       }, []);
   
-     const tableColumns = ColumnsModule.columns(fetchData);
+    //  const tableColumns = ColumnsModule.columns(fetchData);
+    const tableColumns = useMemo(() => ColumnsModule.columns(fetchData), [fetchData]);
   return (
     <>
    

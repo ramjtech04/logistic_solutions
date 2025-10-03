@@ -16,8 +16,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import SignUppage from "@/app/account/register/page";
 import { SignUpForm } from "@/app/Components/sign-up";
+import Link from "next/link";
 
 export default function CustomerListPage() {
   
@@ -35,14 +35,16 @@ export default function CustomerListPage() {
             />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
+                <BreadcrumbItem >
+                  <BreadcrumbLink asChild>
+                  <Link href='/admin/dashboard'>Dashboard</Link>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
                   <BreadcrumbPage>Users</BreadcrumbPage>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbSeparator  />
                 <BreadcrumbItem>
                   <BreadcrumbPage>Add User</BreadcrumbPage>
                 </BreadcrumbItem>

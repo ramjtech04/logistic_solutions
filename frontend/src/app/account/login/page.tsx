@@ -1,8 +1,12 @@
-import React from 'react'
-import { LoginForm } from '@/app/Components/login-form'
+"use client"
+// import { LoginForm } from '@/app/Components/login-form'
+import dynamic from "next/dynamic";
+import Image from 'next/image'
 import Link from 'next/link'
-
-
+const LoginForm = dynamic(
+  () => import('@/app/Components/login-form').then(mod => mod.LoginForm),
+  { ssr: false, loading: () => <p>Loading form...</p> }
+);
 
 const Loginpage = () => {
   return (
@@ -14,12 +18,15 @@ const Loginpage = () => {
           
            <Link href="/" className=" flex items-center ">
         
-           <img
-          src="/v1.jpg"
-          alt="Image"
-          className=" h-[25px]   sm:h-[25px] mr-2"
-          
-        />
+        
+          <Image
+              src="/v1.jpg"
+              alt="Logo"
+              width={25}
+              height={25}
+              priority
+              className="mr-2"
+            />
        <span className=" text-sm font-bold text-dark-600 ">LOGISTIC</span><span className=" text-sm  text-dark-600">SOLUTION</span>
        
         </Link>
@@ -31,10 +38,13 @@ const Loginpage = () => {
         </div>
       </div>
       <div className="bg-muted relative hidden lg:block">
-        <img
+       
+          <Image
           src="/truckimg.jpg"
-          alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          alt="Truck Image"
+          fill
+          className="object-cover dark:brightness-[0.2] dark:grayscale"
+          priority
         />
     
       </div>

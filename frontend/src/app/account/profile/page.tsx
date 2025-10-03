@@ -1,7 +1,8 @@
-import Navbar from '@/app/Components/Navbar'
-import Profilepage from '@/app/Components/profile-form'
-import React from 'react'
-
+"use client"
+import dynamic from "next/dynamic";
+// dynamic import
+const Navbar = dynamic(() => import('@/app/Components/Navbar'), { ssr: false });
+const Profilepage = dynamic(() => import('@/app/Components/profile-form'), { ssr: false, loading: () => <p>Loading form...</p> });
 const page = () => {
   return (
    <>

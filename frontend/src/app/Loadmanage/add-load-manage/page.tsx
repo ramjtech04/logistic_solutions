@@ -1,9 +1,16 @@
+"use client"
+// import Navbar from '@/app/Components/Navbar'
 
-import Navbar from '@/app/Components/Navbar'
-import React, { useState } from 'react'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
-import Link from 'next/link'
-import LoadRequestForm from '@/app/Components/load-form'
+
+// import LoadRequestForm from '@/app/Components/load-form'
+import dynamic from "next/dynamic";
+import Link from 'next/link';
+
+// dynamic import
+const Navbar = dynamic(() => import('@/app/Components/Navbar'), { ssr: false });
+const LoadRequestForm = dynamic(() => import('@/app/Components/load-form'), { ssr: false, loading: () => <p>Loading form...</p> });
+
 const AddLoadManagepage = () => {
   return (
     <>
@@ -18,8 +25,8 @@ const AddLoadManagepage = () => {
        <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="/">Home</Link>
+          <BreadcrumbLink  asChild>
+        <Link href="/">Home</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />

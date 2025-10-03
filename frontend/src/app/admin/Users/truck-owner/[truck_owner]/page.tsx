@@ -3,6 +3,7 @@ import Specific_trucks from "./Specific_trucks"
 import { AppSidebar } from "@/components/ui/app-sidebar"
 import { Separator } from "@/components/ui/separator"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
+import Link from "next/link"
 
 
 export default async function TruckOwnerPageList(props: PageProps<'/admin/Users/truck-owner/[truck_owner]'>) {
@@ -24,7 +25,9 @@ export default async function TruckOwnerPageList(props: PageProps<'/admin/Users/
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+                  <BreadcrumbLink asChild>
+                  <Link href="/admin/dashboard">Dashboard</Link>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
@@ -32,7 +35,9 @@ export default async function TruckOwnerPageList(props: PageProps<'/admin/Users/
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbLink href="/admin/Users/truck-owner">Truck Owners</BreadcrumbLink>
+                  <BreadcrumbLink asChild>
+                  <Link href="/admin/Users/truck-owner"> Truck Owners</Link>
+                 </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>

@@ -1,8 +1,9 @@
+// import Navbar from "@/app/Components/Navbar";
 "use client"
-
-import Navbar from "@/app/Components/Navbar";
+import dynamic from "next/dynamic";
+const Navbar = dynamic(() => import('@/app/Components/Navbar'), { ssr: false });
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface Customer {
   _id: string;
@@ -98,17 +99,16 @@ const AssignTruck = () => {
 };
 
   // Filter deliveries based on selected filter button
- const filteredData = filter
-  ? data.filter((d) => {
-      if (filter === "Accepted") return d.requestStatus === "Accepted";
-      if (filter === "Approved") 
-        return d.requestStatus === "Approved" && d.deliveryStatus === DeliveryStatus.NotStarted;
-      if (filter === "Transmit") return d.deliveryStatus === DeliveryStatus.InTransit;
-      if (filter === "Delivered") return d.deliveryStatus === DeliveryStatus.Delivered;
-      return true;
-    })
-  : data;
-
+ const filteredData = useMemo(() => {
+  if (!filter) return data;
+  return data.filter(d => {
+    if (filter === "Accepted") return d.requestStatus === "Accepted";
+    if (filter === "Approved") return d.requestStatus === "Approved" && d.deliveryStatus === DeliveryStatus.NotStarted;
+    if (filter === "Transmit") return d.deliveryStatus === DeliveryStatus.InTransit;
+    if (filter === "Delivered") return d.deliveryStatus === DeliveryStatus.Delivered;
+    return true;
+  });
+}, [data, filter]);
 
   return (
     <>

@@ -1,18 +1,23 @@
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+"use client"
 
-import { AppSidebar } from "@/components/ui/app-sidebar"
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import UserUpdated from "./UserUpdated"
+import Link from "next/link"
+import dynamic from "next/dynamic"
+import { useParams } from "next/navigation"
 
+// Lazy load components that break SSR
+const AppSidebar = dynamic(() => import("@/components/ui/app-sidebar").then(mod => mod.AppSidebar), { ssr: false })
+const UserUpdated = dynamic(() => import("./UserUpdated").then(mod => mod.default), { ssr: false })
 
-export default async function TruckOwnerPageList(props: PageProps<'/admin/Users/edit-user/[mode]/[id]'>) {
-  const { mode,id } = await props.params
+export default function TruckOwnerPageList() {
+  const params = useParams<{ mode: string; id: string }>()
+  const mode = params?.mode
+  const id = params?.id
 
-  
   return (
-   <>
-     <SidebarProvider>
+    <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2">
@@ -25,13 +30,15 @@ export default async function TruckOwnerPageList(props: PageProps<'/admin/Users/
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+                  <BreadcrumbLink asChild>
+                    <Link href='/admin/dashboard'>Dashboard</Link>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <Breadcrumb>Users</Breadcrumb>
                 </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbPage>{mode} User</BreadcrumbPage>
                 </BreadcrumbItem>
@@ -41,12 +48,10 @@ export default async function TruckOwnerPageList(props: PageProps<'/admin/Users/
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="bg-white/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min">
-        <UserUpdated mode={mode} id={id} /> 
+            <UserUpdated mode={mode} id={id} /> 
           </div>
         </div>
       </SidebarInset>
     </SidebarProvider>
-       
-   </>
   )
 }

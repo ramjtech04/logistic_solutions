@@ -1,13 +1,7 @@
 "use client"
-import Navbar from '@/app/Components/Navbar'
-
-
-import { Button } from "@/components/ui/button"
-
-import { useRouter } from 'next/navigation'
-import TrucksTableForm from './truck-table-form'
-
-
+import dynamic from "next/dynamic";
+const Navbar = dynamic(() => import('@/app/Components/Navbar'), { ssr: false });
+const TrucksTableForm = dynamic(() => import('./truck-table-form'), { ssr: false, loading: () => <p>Loading form...</p> });
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,12 +10,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import Link from 'next/link'
-
+import Link from "next/link";
 const Truckspage = () => {
     
-    const router =useRouter(); 
-
+    
   return (
     <>
     <Navbar/>
@@ -35,8 +27,8 @@ const Truckspage = () => {
    <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="/">Home</Link>
+          <BreadcrumbLink asChild >
+                <Link href='/'>Home</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
@@ -47,7 +39,7 @@ const Truckspage = () => {
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb> 
-       <Button  onClick={()=>router.push('/trucks/add/add')} className='mb-2 bg-black text-white hover:text-black'>Add Truck</Button>
+
       <TrucksTableForm/>
 </div>
     

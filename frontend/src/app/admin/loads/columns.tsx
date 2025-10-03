@@ -23,7 +23,12 @@ export type Loads = {
  requestStatus:string
  deliveryStatus:string
  createdAt:string
-  
+ assignedTruckId?: {
+    truckNumber: string
+  } | null
+  acceptedTruckId?:{
+    truckNumber: string
+  }|null
 }
 
 export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
@@ -32,14 +37,8 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
     header: "S.No",
     cell: ({ row }) => row.index + 1, // ✅ index + 1
     
-  },{
-    accessorKey:"createdAt",
-     header: "DateTime",
-  cell: ({ row }) => {
-    const date = new Date(row.original.createdAt);
-    return date.toLocaleString(); // e.g. 24/09/2025, 10:30:45 AM
   },
-  },
+
    {
     accessorKey: "pickupCity",
      header:"pickupCity",
@@ -49,34 +48,34 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
      header:"dropCity",
     
   },
-  
     {
-    accessorKey: "loadType",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          loadType
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-  },{
-    accessorKey: "loadWeight",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          loadWeight
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-  }
+  id: "loadInfo",
+  header: "Load Info",
+  accessorFn: (row) => `${row.loadType} (${row.loadWeight})`,  // ✅ merge values
+  cell: ({ row }) => (
+    <span>
+      {row.original.loadType} ({row.original.loadWeight})
+    </span>
+  ),
+  enableGlobalFilter: true,   // ✅ searchable
+},
+{
+  id: "truckNumber",
+  header: "Truck Number",
+  accessorFn: (row) => 
+    row.assignedTruckId?.truckNumber ??
+    row.acceptedTruckId?.truckNumber ??
+    "Not Assigned",
+  cell: ({ row }) => (
+    <span className="font-medium">
+      {row.original.assignedTruckId?.truckNumber ||
+       row.original.acceptedTruckId?.truckNumber ||
+       "Not Assigned"}
+    </span>
+  ),
+  enableGlobalFilter: true,
+}
+
  ,{
     accessorKey: "deliveryStatus",
     header: ({ column }) => {
@@ -89,9 +88,8 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
-    },
-  },
-  {
+    }
+  } ,{
     accessorKey: "requestStatus",
     header: ({ column }) => {
       return (
@@ -99,14 +97,15 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          requestStatus
+          requeststatus
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
-    },
+    }
   } ,
   {
   id: "actions",
+  header:"Actions",
   cell: ({ row }) => {
     const handleDelete = async () => {
         const token = localStorage.getItem("token");
@@ -132,8 +131,10 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
       // optional: refresh table or remove row from state
     }
 
+
     return (
       <>
+      <div className="flex  gap-3  items-center">
       <button onClick={handleDelete} className="text-red-500 hover:text-red-700">
         <FaTrashAlt size={16} />
       </button>
@@ -143,11 +144,118 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
       >
       <FaFileInvoice />
       </Link>
+   </div>
+
       </>
     )
   },
-}
+},{
+    id: "Update Status",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          update Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+     cell: ({ row }) => {
+const handleStatusUpdate = async (requestId: string, newStatus: string) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
 
+    const url = process.env.NEXT_PUBLIC_URL_BASE;
+
+    const res = await fetch(`${url}api/delivery/updatestatus/${requestId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status: newStatus }), // ✅ match backend enum
+    });
+
+    const result = await res.json();
+    if (res.ok) {
+      console.log("Status updated:", result);
+      refreshTable(); // refresh table after update
+    } else {
+      console.error("Error updating status:", result.message || result);
+      alert("Failed to update status");
+    }
+  } catch (err) {
+    console.error("Request failed:", err);
+    alert("Something went wrong");
+  }
+};
+
+      return(
+        <>
+
+{ (row.original.requestStatus == "Pending") && (
+  <Link    href={`/admin/loads/${row.original._id}`}
+    className="bg-yellow-500 text-white px-2 py-1 rounded" 
+    
+  >
+  Assign Truck
+  </Link>
+)}  
+{ (row.original.requestStatus == "Accepted") && (
+  <Link    href={`/admin/loads/${row.original._id}`}
+    className="bg-sky-500 text-white px-2 py-1 rounded" 
+    
+  >
+  SHow Details
+  </Link>
+)}    
+
+  {(row.original.requestStatus === "Cancelled") && (
+  <Button
+    className="bg-red-500 text-white px-2 py-1 rounded" disabled={true}
+    
+  >
+   Cancelled
+  </Button>
+)}
+ 
+{row.original.deliveryStatus === "NotStarted" && row.original.requestStatus === "Approved" && (
+  <Button
+    className="bg-green-800 text-white px-2 py-1 rounded"
+    onClick={() => handleStatusUpdate(row.original._id, "InTransit")}
+  >
+    NotStarted
+  </Button>
+)}
+{row.original.deliveryStatus === "InTransit" && row.original.requestStatus === "Approved" &&  (
+  <Button
+    className="bg-blue-800 text-white px-2 py-1 rounded"
+    onClick={() => handleStatusUpdate(row.original._id, "Delivered")}
+  >
+    InTransit
+  </Button>
+)}
+
+
+{row.original.deliveryStatus === "Delivered" &&  row.original.requestStatus === "Approved" && (
+  <Button
+    className="bg-green-800 text-white px-2 py-0.5 rounded"
+    disabled={true}
+  >
+    Delivered
+  </Button>
+)}
+        </>
+      )
+     }
+    },
+  
 
 
 ]

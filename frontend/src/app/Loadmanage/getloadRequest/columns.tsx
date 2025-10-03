@@ -31,50 +31,36 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
     cell: ({ row }) => row.index + 1, // ✅ index + 1
     
   },
-   {
+    {
     id: "PickupDetails",
-     header:"pickupState",
+    header: "Pickup Details",
     cell: ({ row }) => {
       const { pickupAddress, pickupCity, pickupState } = row.original;
       return `${pickupAddress}, ${pickupCity}, ${pickupState}`;
     },
+    filterFn: "includesString", // enable per-column filter
   },
   {
-    id: "dropDetails",
-     header: "Drop Details",
+    id: "DropDetails",
+    header: "Drop Details",
     cell: ({ row }) => {
       const { dropAddress, dropCity, dropState } = row.original;
       return `${dropAddress}, ${dropCity}, ${dropState}`;
     },
+    filterFn: "includesString", // enable per-column filter
   },
-    {
-    accessorKey: "loadType",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          loadType
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-  },{
-    accessorKey: "loadWeight",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          loadWeight
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-  }
- ,{
+   {
+  id: "loadInfo",
+  header: "Load Info",
+  accessorFn: (row) => `${row.loadType} (${row.loadWeight})`,  // ✅ merge values
+  cell: ({ row }) => (
+    <span>
+      {row.original.loadType} ({row.original.loadWeight})
+    </span>
+  ),
+  enableGlobalFilter: true,   // ✅ searchable
+},
+  {
     accessorKey: "requestStatus",
     header: ({ column }) => {
       return (

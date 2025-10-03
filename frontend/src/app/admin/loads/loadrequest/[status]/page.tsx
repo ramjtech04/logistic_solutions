@@ -46,12 +46,19 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
     const result = await res.json();
     console.log(result.requests)
     let availableRequest;
+      const requests = result.requests || [];
+      const slug = status?.toString().toLowerCase();
     if(status =="all"){
- setData(result.requests || []);
+ setData(requests);
     }else{
- availableRequest = (result.requests || []).filter(
-      (truck: any) => truck.requestStatus?.toLowerCase() === status
-    );
+//  availableRequest = (result.requests || []).filter(
+//       (truck: any) => truck.requestStatus?.toLowerCase() === status
+//     );
+   const availableRequest = requests.filter((req: any) => {
+        const requestStatus = req.requestStatus?.toLowerCase();
+        const deliveryStatus = req.deliveryStatus?.toLowerCase();
+        return requestStatus === slug || deliveryStatus === slug;
+      });
     setData(availableRequest);
     }
       
@@ -99,8 +106,13 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
         </header>
 
         {/* ---------- Page Content ---------- */}
-         {status}
-              <DataTables columns={tableColumns} data={data} />
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          <div className="bg-white/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min">
+       
+          <DataTables columns={tableColumns} data={data} />
+          </div>
+        </div>
+            
       </SidebarInset>
     </SidebarProvider>
   );

@@ -1,22 +1,19 @@
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ForgetForm } from "./forget-form";
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+
+import dynamic from "next/dynamic";
 import Link from "next/link"
 import { CiLock } from "react-icons/ci";
 
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert"
-import { useState } from "react";
-import { OTPForm } from "./otp-form";
-import { ResetPassword } from "./reset-password-form";
 
+import { useState } from "react";
+// import { OTPForm } from "./otp-form";
+// import { ResetPassword } from "./reset-password-form";
+// import { ForgetForm } from "./forget-form";
+// Dynamically import forms
+const ForgetForm = dynamic(() => import("./forget-form").then((mod) => mod.ForgetForm), { ssr: false });
+const OTPForm = dynamic(() => import("./otp-form").then((mod) => mod.OTPForm), { ssr: false });
+const ResetPassword = dynamic(() => import("./reset-password-form").then((mod) => mod.ResetPassword), { ssr: false });
 
 export default function LoginPage() {
 // const [step , setStep] = //useState("forget");

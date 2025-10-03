@@ -1,9 +1,9 @@
 "use client";
-
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import {  User } from "../columns";
 import { DataTable } from "@/components/ui/data-tables";
-import { AppSidebar } from "@/components/ui/app-sidebar";
+// import { AppSidebar } from "@/components/ui/app-sidebar";
 import * as ColumnsModule from "../columns";
 import {
   Breadcrumb,
@@ -20,6 +20,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+const AppSidebar = dynamic(() => import("@/components/ui/app-sidebar").then(mod => mod.AppSidebar), { ssr: false });
+
 
 export default function CustomerListPage() {
   const [data, setData] = useState<User[]>([]);
