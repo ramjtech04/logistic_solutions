@@ -41,15 +41,34 @@ export const registerUser = async (req: Request, res: Response) => {
 
     // send email only if role is customer or truck_owner
     if (user && (user.role === "customer" || user.role === "truck_owner")) {
-      await sendEmail({
-        to: process.env.EMAIL_USER!,
-        subject: "New User Signed Up",
-        text: `A new user has signed up on the platform.
+       const admins = await User.find({ role: "admin" }).select("email");
+
+      if (admins.length > 0) {
+        const adminEmails = admins.map((a) => a.email);
+
+        // send to each admin
+        await Promise.all(
+          adminEmails.map((adminEmail) =>
+            sendEmail({
+              to: adminEmail,
+              subject: "New User Registration Notification",
+              text: `
+              Dear Admin,
+A new user has successfully registered on the Logistic Solution platform. Below are the details:
+
 Name: ${user.name}
 Email: ${user.email}
 Phone: ${user.phone}
-Role: ${user.role}`,
-      });
+Role: ${user.role.toUpperCase()}
+
+
+
+Best regards,  
+The Logistic Solutions Team`,
+            })
+          )
+        );
+      }
     }
 
     //Response
@@ -123,15 +142,43 @@ export const loginUser = async (req: Request, res: Response) => {
 
     // send email only if role is customer or truck_owner
     if (user.role === "customer" || user.role === "truck_owner") {
-      await sendEmail({
-        to: process.env.EMAIL_USER!,
-        subject: "User Logged In",
-        text: `User logged in on the platform.
+       const admins = await User.find({ role: "admin" }).select("email");
+
+  if (admins.length > 0) {
+    const adminEmails = admins.map(a => a.email);
+
+    await Promise.all(
+      adminEmails.map(adminEmail =>
+        sendEmail({
+          to: adminEmail,
+          subject: "User Login Alert – Logistic Solution",
+          text: `Dear Admin,
+
+A user has just logged into the Logistic Solution platform.
+
+User Details:
 Name: ${user.name}
 Email: ${user.email}
-Phone: ${user.phone}
-Role: ${user.role}`,
-      });
+Role: ${user.role.toUpperCase()}
+Login Time: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
+
+This is an automated notification from Logistic Solution.
+
+Best regards,
+Team Logistic Solution`
+        })
+      )
+    );
+  }
+//       await sendEmail({
+//         to: process.env.EMAIL_USER!,
+//         subject: "User Logged In",
+//         text: `User logged in on the platform.
+// Name: ${user.name}
+// Email: ${user.email}
+// Phone: ${user.phone}
+// Role: ${user.role}`,
+//       });
     }
 
     // always return success response
