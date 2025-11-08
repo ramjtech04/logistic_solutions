@@ -323,7 +323,7 @@ export function DataTables<TData, TValue>({
       <Button  className="bg-black hover:bg-black text-white ml-auto" ><Link href='/trucks/add/add'>Add Trucks</Link></Button>
       </div>
 
-    <div className="overflow-hidden rounded-md border">   
+    <div className="overflow-hidden rounded-md border hidden md:block">   
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -367,6 +367,40 @@ export function DataTables<TData, TValue>({
         </TableBody>
       </Table>
     </div>
+
+    {/* ✅ Mobile View (Card Layout) */}
+<div className="block md:hidden space-y-4">
+  {table.getRowModel().rows?.length ? (
+    table.getRowModel().rows.map((row) => (
+      <div
+        key={row.id}
+        className="border rounded-lg p-4 shadow-sm bg-white"
+      >
+        {row.getVisibleCells().map((cell) => (
+          <div
+            key={cell.id}
+            className="flex justify-between py-1 border-b last:border-none"
+          >
+            {/* Fixed Header */}
+            <span className="font-medium text-gray-600">
+              {cell.column.columnDef.header && typeof cell.column.columnDef.header === "string"
+                ? cell.column.columnDef.header
+                : cell.column.id}
+            </span>
+
+            {/* Cell Value */}
+            <span className="text-gray-900">
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </span>
+          </div>
+        ))}
+      </div>
+    ))
+  ) : (
+    <p className="text-center text-gray-500 py-6">No results.</p>
+  )}
+</div>
+
           <div className="flex items-center justify-end space-x-2 py-4">
           <div className="text-muted-foreground flex-1 text-sm">
   {table.getFilteredSelectedRowModel().rows.length} of{" "}

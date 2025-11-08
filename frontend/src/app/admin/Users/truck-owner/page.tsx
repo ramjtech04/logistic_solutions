@@ -35,6 +35,7 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
     });
 
     const result = await res.json();
+    console.log(result.data);
     setData(result.data);
   };
 

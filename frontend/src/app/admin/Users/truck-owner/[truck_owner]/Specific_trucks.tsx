@@ -62,30 +62,48 @@ export default function Specific_trucks({ truck_owner }: { truck_owner: string }
       ) : (
         
         data.map((truck, index) => (
-          <Card key={index} className="shadow-lg hover:shadow-xl transition rounded-2xl" >
-           
-            <CardHeader>
-              <CardTitle className="text-lg text-center font-semibold">
-                
-              Truck Number :  {truck.truckNumber || "Unknown Truck"}
-              </CardTitle>
-              <CardDescription className='text-center'>
-            truck type :    {truck.truckType || "TruckType not available"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+         <Card
+  key={index}
+  className="shadow-md hover:shadow-xl  rounded-2xl border border-gray-100 bg-gradient-to-br from-white to-gray-50"
+>
+  <CardHeader className="text-center border-b pb-4">
+    <CardTitle className="text-xl font-semibold text-gray-800">
+      🚛 {truck.truckNumber || "Unknown Truck"}
+    </CardTitle>
+    <CardDescription className="text-gray-500 text-sm mt-1">
+      Type: {truck.truckType || "Not Available"}
+    </CardDescription>
+  </CardHeader>
 
-              <p><strong>Status:</strong> {truck.status || "N/A"}</p>
-              <p><strong>Capacity:</strong> {truck.capacity || "N/A"}</p>
-            <p><strong>Fuel:</strong> {truck.fuelType || "N/A"}</p>
-                
-            </CardContent>
-           <CardFooter className='flex justify-end items-center '>
-          <Button  >
-            <Link href={`/trucks/edit/${truck._id}`}><FaPen/></Link>
-          </Button>
-           </CardFooter>
-          </Card>
+  <CardContent className="space-y-2 py-4">
+    <div className="flex justify-between text-gray-700">
+      <span className="font-medium">Status:</span>
+      <span className="text-gray-600">{truck.status || "N/A"}</span>
+    </div>
+
+    <div className="flex justify-between text-gray-700">
+      <span className="font-medium">Capacity:</span>
+      <span className="text-gray-600">{truck.capacity || "N/A"}</span>
+    </div>
+
+    <div className="flex justify-between text-gray-700">
+      <span className="font-medium">Fuel:</span>
+      <span className="text-gray-600">{truck.fuelType || "N/A"}</span>
+    </div>
+  </CardContent>
+
+  <CardFooter className="flex justify-end border-t pt-3">
+    <Button
+      variant="outline"
+      className="rounded-xl border-gray-300 text-gray-700 hover:bg-black hover:text-white transition"
+    >
+      <Link href={`/trucks/edit/${truck._id}`} className="flex items-center gap-2">
+        <FaPen /> Edit
+      </Link>
+    </Button>
+  </CardFooter>
+</Card>
+
         ))
       )}
     </div>

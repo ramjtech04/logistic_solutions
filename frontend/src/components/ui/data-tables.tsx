@@ -225,17 +225,17 @@ export function DataTable<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button className="bg-black hover:bg-black text-white ml-auto"><Link href='/admin/Users/add-user'>Add </Link></Button>
+        <Button className="bg-black hover:bg-black text-white ml-auto"><Link href='/Loadmanage/add-load-manage'>Add </Link></Button>
       </div>
 
-    <div className="overflow-hidden rounded-md border">   
+    <div className="overflow-hidden rounded-md border hidden md:block">   
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="text-center ">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -256,14 +256,14 @@ export function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id} className="text-center">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
               </TableRow>
             ))
           ) : (
-            <TableRow>
+            <TableRow >
               <TableCell colSpan={columns.length} className="h-24 text-center">
                 No results.
               </TableCell>
@@ -272,6 +272,39 @@ export function DataTable<TData, TValue>({
         </TableBody>
       </Table>
     </div>
+
+    <div className="block md:hidden space-y-4">
+      {table.getRowModel().rows?.length ? (
+        table.getRowModel().rows.map((row) => (
+          <div
+            key={row.id}
+            className="border rounded-lg p-4 shadow-sm bg-white"
+          >
+            {row.getVisibleCells().map((cell) => (
+              <div
+                key={cell.id}
+                className="flex justify-between py-1 border-b last:border-none"
+              >
+                {/* Fixed Header */}
+                <span className="font-medium text-gray-600">
+                  {cell.column.columnDef.header && typeof cell.column.columnDef.header === "string"
+                    ? cell.column.columnDef.header
+                    : cell.column.id}
+                </span>
+    
+                {/* Cell Value */}
+                <span className="text-gray-900">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </span>
+              </div>
+            ))}
+          </div>
+        ))
+      ) : (
+        <p className="text-center text-gray-500 py-6">No results.</p>
+      )}
+    </div>
+    
           <div className="flex items-center justify-end space-x-2 py-4">
           <div className="text-muted-foreground flex-1 text-sm">
   {table.getFilteredSelectedRowModel().rows.length} of{" "}

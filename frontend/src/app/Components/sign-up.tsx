@@ -149,8 +149,12 @@ await Swal.fire({
     <SelectValue placeholder="Role" />
   </SelectTrigger>
   <SelectContent>
+    {(pathname.startsWith('/admin/Users/add-user'))&&(<SelectItem value="admin">Admin</SelectItem>)}
+     
+             <SelectItem value="truck_owner">Truck Owner</SelectItem>
     <SelectItem value="customer">customer</SelectItem>
-    <SelectItem value="truck_owner">Truck Owner</SelectItem>
+
+   
   </SelectContent>
 </Select>
         </div>

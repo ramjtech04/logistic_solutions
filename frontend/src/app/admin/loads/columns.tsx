@@ -23,6 +23,11 @@ export type Loads = {
  requestStatus:string
  deliveryStatus:string
  createdAt:string
+ customerId?:{
+    name:string
+    email:string
+    phone:string
+ }
  assignedTruckId?: {
     truckNumber: string
   } | null
@@ -38,20 +43,71 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
     cell: ({ row }) => row.index + 1, // ✅ index + 1
     
   },
-
-   {
-    accessorKey: "pickupCity",
-     header:"pickupCity",
-    
-  },  {
-    accessorKey: "dropCity",
-     header:"dropCity",
-    
+{
+  accessorKey: "createdAt",
+  header: "Date and time",
+  cell: ({ row }) => {
+    const date = new Date(row.original.createdAt)
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+        hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    })
   },
+},
+  
+ {
+  id: "Pickup Details",
+  header: "Pickup Details",
+  accessorFn: (row) => `${row.pickupAddress}${row.pickupCity}${row.pickupState}`,  
+  cell: ({ row }) => (
+  <>
+   
+       {row.original.pickupAddress} <br/>
+      {row.original.pickupCity}, {row.original.pickupState}
+  
+   
+   </>
+  ),
+  enableGlobalFilter: true,   // ✅ searchable
+},
+  {
+  id: "Drop Details",
+  header: "Drop Details",
+  accessorFn: (row) => `${row.dropAddress}${row.dropCity}${row.dropState}`,  
+  cell: ({ row }) => (
+  <>
+   
+       {row.original.dropAddress} <br/>
+      {row.original.dropCity}, {row.original.dropState}
+  
+   
+   </>
+  ),
+  enableGlobalFilter: true,   // ✅ searchable
+},
+  {
+  id: "Customer Details",
+  header: "Customer Details",
+  accessorFn: (row) => `${row.customerId?.name}${row.customerId?.email}${row.customerId?.phone}`,  
+  cell: ({ row }) => (
+  <>
+   
+       {row.original.customerId?.name} <br/>
+      ({row.original.customerId?.email}, {row.original.customerId?.phone})
+  
+   
+   </>
+  ),
+  enableGlobalFilter: true,   // ✅ searchable
+},
     {
   id: "loadInfo",
   header: "Load Info",
-  accessorFn: (row) => `${row.loadType} (${row.loadWeight})`,  // ✅ merge values
+  accessorFn: (row) => `${row.loadType}${row.loadWeight}`,  // ✅ merge values
   cell: ({ row }) => (
     <span>
       {row.original.loadType} ({row.original.loadWeight})
@@ -91,6 +147,7 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
     }
   } ,{
     accessorKey: "requestStatus",
+      enableHiding: true,
     header: ({ column }) => {
       return (
         <Button
@@ -102,11 +159,21 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
         </Button>
       )
     }
+    
   } ,
   {
   id: "actions",
-  header:"Actions",
+  header: "Actions",
   cell: ({ row }) => {
+    const date = new Date(row.original.createdAt);
+    const formatted = date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
     const handleDelete = async () => {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -134,7 +201,8 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
 
     return (
       <>
-      <div className="flex  gap-3  items-center">
+      
+      <div className="flex  gap-3  items-center ">
       <button onClick={handleDelete} className="text-red-500 hover:text-red-700">
         <FaTrashAlt size={16} />
       </button>
@@ -157,12 +225,15 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          update Status
+          Status
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
+    
      cell: ({ row }) => {
+
+  
 const handleStatusUpdate = async (requestId: string, newStatus: string) => {
   try {
     const token = localStorage.getItem("token");
@@ -204,7 +275,7 @@ const handleStatusUpdate = async (requestId: string, newStatus: string) => {
     className="bg-yellow-500 text-white px-2 py-1 rounded" 
     
   >
-  Assign Truck
+  AssignTruck
   </Link>
 )}  
 { (row.original.requestStatus == "Accepted") && (

@@ -1,12 +1,11 @@
 "use client"
 
 import {
-  BadgeCheck,
-  Bell,
+ 
   ChevronsUpDown,
-  CreditCard,
+
   LogOut,
-  Sparkles,
+
 } from "lucide-react"
 
 import {
@@ -17,7 +16,6 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -29,7 +27,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import Link from "next/link"
+
 import { useRouter } from "next/navigation"
 import { FaUser } from "react-icons/fa"
 

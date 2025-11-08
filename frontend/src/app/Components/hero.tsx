@@ -17,7 +17,8 @@ const HeroBanner = () => {
      
 
     <div className=" relative z-10  ">
-   <img src="/ls.png" alt="image" className=" "  />
+   {/* <img src="/ls.png" alt="image" className=" "  /> */}
+   <img src="indianbg1.png" alt="" />
     </div>
    
     {/* Content */}

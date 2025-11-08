@@ -17,6 +17,7 @@ export type User = {
   phone:string
   createdAt:string
   role :string
+  truckCount?:number
 }
 
 export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
@@ -25,6 +26,7 @@ export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
      header: ({ column }) => {
       return (
         <Button
+         className="font-semibold"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -41,6 +43,7 @@ export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
     header: ({ column }) => {
       return (
         <Button
+          className="font-semibold"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -54,7 +57,8 @@ export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
     accessorKey: "email",
      header: ({ column }) => {
       return (
-        <Button
+        <Button 
+          className="font-semibold"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -69,6 +73,7 @@ export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
      header: ({ column }) => {
       return (
         <Button
+          className="font-semibold"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -83,6 +88,7 @@ export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
      header: ({ column }) => {
       return (
         <Button
+          className="font-semibold text-center"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
@@ -93,14 +99,34 @@ export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
     },
   
   cell: ({ row }) => {
-    const date = new Date(row.original.createdAt);
-    return date.toLocaleString(); // e.g. 24/09/2025, 10:30:45 AM
+    const date = new Date(row.original.createdAt)
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+        hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    })
   },
   }
   ,
   
+  
   {
   id: "actions",
+   header: ({ column }) => {
+      return (
+        <Button
+          className=" font-semibold"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Actions
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   cell: ({ row }) => {
     const handleDelete = async () => {
         const token = localStorage.getItem("token");
@@ -126,6 +152,7 @@ export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
 
     return (
       <>
+      <div className="flex justify-center items-center  gap-4">
       <button onClick={handleDelete} className="text-red-500 hover:text-red-700">
         <FaTrashAlt size={16} />
       </button>
@@ -137,11 +164,12 @@ export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
       </Link>
       
       {row.original.role ==="truck_owner" &&(
-<Link   href={`/admin/Users/truck-owner/${row.original._id}`}  className="text-purple-500 hover:text-purple-700">
-        <FaTruck size={16} />
+<Link  href={`/admin/Users/truck-owner/${row.original._id}`}  className="text-purple-500 hover:text-purple-700 flex items-center gap-1">
+       <FaTruck size={16} />({row.original.truckCount})
       </Link>
+    
       )}
-       
+       </div>
       </>
     )
   },

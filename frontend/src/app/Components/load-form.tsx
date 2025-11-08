@@ -19,6 +19,7 @@ interface Customer {
   _id: string
   name: string
   email: string
+  phone: string
 }
 
 export default function LoadRequestForm() {
@@ -55,6 +56,7 @@ export default function LoadRequestForm() {
         headers: { Authorization: `Bearer ${token}` },
       })
       const data = await res.json()
+      console.log(data)
       setCustomers(data.data)
     }
 
@@ -65,7 +67,8 @@ export default function LoadRequestForm() {
     e.preventDefault()
 
     const customerIdToUse = role === "admin" ? selectedCustomer : userId
-
+console.log("Submitting for customer ID:", customerIdToUse);
+    console.log("slected",selectedCustomer, userId);
     if (!customerIdToUse) {
       Swal.fire("Error", "Customer ID not found", "error")
       return
@@ -150,7 +153,7 @@ export default function LoadRequestForm() {
                   <SelectContent>
                     {customers.map((c) => (
                       <SelectItem key={c._id} value={c._id}>
-                        {c.name} ({c.email})
+                        {c.name} ({c.email}/{c.phone})
                       </SelectItem>
                     ))}
                   </SelectContent>

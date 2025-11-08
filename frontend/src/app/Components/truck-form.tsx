@@ -253,6 +253,9 @@ const handleSubmit  =  async(e: React.FormEvent) => {
     <SelectValue placeholder="Select TruckType" />
   </SelectTrigger>
   <SelectContent>
+      <SelectItem value="Heavy Commerical" >Heavy Commerical Vechicles</SelectItem>
+         <SelectItem value="Medium Commerical" >Medium Commerical Vechicles</SelectItem>
+            <SelectItem value="Light Commerical" >Light Commerical Vechicles</SelectItem>
     <SelectItem value="open" >Open</SelectItem>
     <SelectItem value="container">Container</SelectItem>
     <SelectItem value="trailer">Trailer</SelectItem>

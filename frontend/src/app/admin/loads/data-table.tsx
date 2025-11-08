@@ -33,6 +33,7 @@ import { Input } from "@/components/ui/input"
 import { GrStatusGood } from "react-icons/gr";
 import { LuSettings2 } from "react-icons/lu";
 import { FaCirclePlus, FaTruck } from "react-icons/fa6"
+import { request } from "http"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -50,7 +51,11 @@ export function DataTables<TData, TValue>({
   )
   const [globalFilter, setGlobalFilter] = useState("")
    const [columnVisibility, setColumnVisibility] =
-    useState<VisibilityState>({})
+    useState<VisibilityState>({
+      requestStatus:false,
+      deliveryStatus:false,
+
+    })
     const [rowSelection, setRowSelection] = useState({})
   const table = useReactTable({
     data,
@@ -184,11 +189,11 @@ export function DataTables<TData, TValue>({
         </DropdownMenu>
       </div>
 
-    <div className="overflow-hidden rounded-md border">   
+    <div className="overflow-hidden rounded-md border hidden md:block">   
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="group hover:bg-gray-50 transition-colors cursor-pointer">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id} className="text-center">
@@ -204,15 +209,16 @@ export function DataTables<TData, TValue>({
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody>
+        <TableBody >
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+              className="group"
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="text-center">
+                  <TableCell key={cell.id} className="text-center ">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -228,6 +234,38 @@ export function DataTables<TData, TValue>({
         </TableBody>
       </Table>
     </div>
+    <div className="block md:hidden space-y-4">
+  {table.getRowModel().rows?.length ? (
+    table.getRowModel().rows.map((row) => (
+      <div
+        key={row.id}
+        className="border rounded-lg p-4 shadow-sm bg-white"
+      >
+        {row.getVisibleCells().map((cell) => (
+          <div
+            key={cell.id}
+            className="flex justify-between py-1 border-b last:border-none"
+          >
+            {/* Fixed Header */}
+            <span className="font-medium text-gray-600">
+              {cell.column.columnDef.header && typeof cell.column.columnDef.header === "string"
+                ? cell.column.columnDef.header
+                : cell.column.id}
+            </span>
+
+            {/* Cell Value */}
+            <span className="text-gray-900 text-right">
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </span>
+          </div>
+        ))}
+      </div>
+    ))
+  ) : (
+    <p className="text-center text-gray-500 py-6">No results.</p>
+  )}
+</div>
+
           <div className="flex items-center justify-end space-x-2 py-4">
           <div className="text-muted-foreground flex-1 text-sm">
   {table.getFilteredSelectedRowModel().rows.length} of{" "}

@@ -38,7 +38,7 @@ const SignUppage = () => {
       </div>
       <div className="bg-muted relative hidden lg:block">
          <Image
-                  src="/truckimg.jpg"
+                  src="/login1.jpg"
                   alt="Truck Image"
                   fill
                   className="object-cover dark:brightness-[0.2] dark:grayscale"

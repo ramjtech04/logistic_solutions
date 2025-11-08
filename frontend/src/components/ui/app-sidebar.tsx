@@ -50,6 +50,9 @@ const data = {
         {
           title: "Trucks Owner",
           url: "/admin/Users/truck-owner",
+        },{
+           title: "Admins",
+          url: "/admin/Users/admins",
         }
        
       ],
@@ -75,7 +78,10 @@ const data = {
       url: "#",
       icon: Boxes,
       items: [
-      
+      {
+          title: "Add Loads",
+          url: "/admin/loads/admin-add-load",
+        },
         {
           title: "All Loads",
           url: "/admin/loads/loadrequest/all",

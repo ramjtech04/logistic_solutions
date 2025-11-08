@@ -9,6 +9,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
@@ -46,6 +47,7 @@ export default function RequestDetailsPage() {
 const [Status,setStatus]=useState("");
 const [trucks, setTrucks] = useState<any[]>([]);
 const [selectedTruck, setSelectedTruck] = useState<string>("");
+const [searchTerm, setSearchTerm] = useState("");
   const fetchData = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -256,7 +258,14 @@ console.log(err)
       }
 };
 
-
+ const filteredTrucks = trucks.filter((truck) => {
+    const term = searchTerm.toLowerCase()
+    return (
+      truck.truckNumber.toLowerCase().includes(term) ||
+      truck.truckType.toLowerCase().includes(term) ||
+      truck.capacity.toLowerCase().includes(term)
+    )
+  })
 const handleSubmitAssign = async()=>{
    const token = localStorage.getItem("token");
   if(selectedTruckOwner==""){
@@ -439,16 +448,18 @@ Swal.close();
                             {singleRequest.requestStatus =="Pending" && (
                 <div className="flex justify-end gap-2">
                   
-      <Dialog>
+      <Dialog     >
       <form>
         <DialogTrigger asChild>
           <Button variant="outline" onClick={fetchTruckOwnerData}>Assign Truck</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
+              <DialogOverlay className="bg-transparent" />
+        <DialogContent className="sm:max-w-full max-w-[calc(100%)] h-full rounded-none p-2 m-0 flex flex-col border-0 overflow-scroll">
+          <DialogHeader className="my-3">
             <DialogTitle>Assign Truck</DialogTitle>
           
           </DialogHeader>
+        
           <div className="grid gap-4">
 
              
@@ -471,19 +482,21 @@ Swal.close();
               
             </div>
             <h1>Select Truck</h1>
-                <div className="mb-2">
+          <Input type="text" placeholder="Search Truck"  value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)} />
+                <div className="mb-2 overflow-scroll max-h-[300px]">
                 <RadioGroup
               value={selectedTruck}
               onValueChange={(value) => setSelectedTruck(value)}
                   className="flex flex-col space-y-2"
                 >
-                  {trucks.length > 0 ? (
-                    trucks.map((truck: any) => (
-                      <div key={truck._id} className="flex items-center space-x-2">
+                  {filteredTrucks.length > 0 ? (
+                    filteredTrucks.map((truck: any) => (
+                      <div key={truck._id} className="flex items-center space-x-2 ">
                         <RadioGroupItem value={truck._id} id={truck._id} />
                         <Label htmlFor={truck._id}>
-                          {truck.truckNumber} — {truck.truckType}/ {truck.capacity} /
-                          {truck.status}
+                          {truck.truckNumber} — {truck.truckType}/ {truck.capacity}  /
+                          {truck.status}  
                         </Label>
                       </div>
                     ))
@@ -500,6 +513,7 @@ Swal.close();
             </DialogClose>
             <Button type="submit" onClick={handleSubmitAssign}>Save changes</Button>
           </DialogFooter>
+
         </DialogContent>
       </form>
     </Dialog>
