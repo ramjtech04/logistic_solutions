@@ -91,7 +91,7 @@ export function DataTable<TData, TValue>({
   variant="outline"
   onClick={() => {
     const rowsToExport = table.getRowModel().rows.map((row, index) => {
-      const exportedRow: Record<string, any> = {};
+      const exportedRow: Record<string, string | number | boolean | Date | null> = {};
 
       // Add SNO first
       exportedRow["SNO"] = index + 1;
@@ -99,68 +99,71 @@ export function DataTable<TData, TValue>({
       // Loop through all visible cells except UI-only columns
       row.getVisibleCells().forEach((cell) => {
         if (cell.column.id !== "actions"&& cell.column.id !== "sno") {
-          exportedRow[cell.column.id] = cell.getValue();
+          exportedRow[cell.column.id] = cell.getValue() as string | number | boolean | Date | null;
         }
       });
 
       // Format createdAt if present
       if (exportedRow["createdAt"]) {
-        exportedRow["createdAt"] = new Date(exportedRow["createdAt"]).toLocaleString();
+        exportedRow["createdAt"] = new Date(exportedRow["createdAt"] as string | number |Date).toLocaleString();
       }
 
       return exportedRow;
     });
 
-    exportToExcel(rowsToExport as any, "table-data.xlsx");
+    exportToExcel(rowsToExport  , "table-data.xlsx");
   }}
 >
  <FaFileExcel /><span className="hidden sm:block">Export to</span>Excel
 
 </Button>
-
 <Button
   variant="outline"
   onClick={() => {
     // 1️⃣ Prepare rows to export
-    const rowsToExport = table.getRowModel().rows.map((row, index) => {
-      const exportedRow: Record<string, any> = {}
+    const rowsToExport: Record<string, string | number | boolean>[] = 
+      table.getRowModel().rows.map((row, index) => {
+        const exportedRow: Record<string, string | number | boolean> = {};
 
-      // Add SNO column
-      exportedRow["SNO"] = index + 1
+        // Add SNO column
+        exportedRow["SNO"] = index + 1;
 
-      // Add only visible columns (skip UI-only columns)
-      row.getVisibleCells().forEach((cell) => {
-        if (cell.column.id !== "actions" && cell.column.id !== "sno") {
-          exportedRow[cell.column.id] = cell.getValue()
-        }
-      })
+        // Add only visible columns (skip UI-only columns)
+        row.getVisibleCells().forEach((cell) => {
+          if (cell.column.id !== "actions" && cell.column.id !== "sno") {
+            const value = cell.getValue();
 
-      // Format createdAt column if present
-      if (exportedRow["createdAt"]) {
-        exportedRow["createdAt"] = new Date(exportedRow["createdAt"]).toLocaleString()
-      }
+            // Convert Date to string, handle null/undefined
+            if (value instanceof Date) {
+              exportedRow[cell.column.id] = value.toLocaleString();
+            } else if (value === null || value === undefined) {
+              exportedRow[cell.column.id] = "";
+            } else {
+              exportedRow[cell.column.id] = value as string | number | boolean;
+            }
+          }
+        });
 
-      return exportedRow
-    })
+        return exportedRow;
+      });
 
     // 2️⃣ Prepare columns for PDF
     const pdfColumns = Object.keys(rowsToExport[0] || {}).map((key) => ({
       header: key,
       key,
-    }))
+    }));
 
-    // 3️⃣ Call your exportToPdf function (with Save As dialog)
+    // 3️⃣ Call exportToPdf function
     exportToPdf({
       columns: pdfColumns,
       data: rowsToExport,
-      fileName: "table-data.pdf", // default filename
-    })
+      fileName: "table-data.pdf",
+    });
   }}
 >
-
   <FaFilePdf /> <span className="hidden sm:block"> Export to </span>PDF
-  
 </Button>
+
  <Select 
     value={pagination.pageSize.toString()}
     onValueChange={(value) => {

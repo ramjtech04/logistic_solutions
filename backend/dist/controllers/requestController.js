@@ -26,16 +26,40 @@ const createRequest = async (req, res) => {
         });
         await newRequest.save();
         const customer = await userModel_1.default.findById(customerId).select("name email phone");
-        await (0, sendEmail_1.sendEmail)({
-            to: process.env.EMAIL_USER,
-            subject: "New Delivery Request from Customer",
-            text: `Customer created a new request.
-      Details:
-        Customer Name:${customer?.name}
-        Customer Email:${customer?.email}
-        Customer Contact:${customer?.phone}
-      `,
-        });
+        const admins = await userModel_1.default.find({ role: "admin" }).select("email");
+        const adminEmails = admins.map(a => a.email);
+        if (adminEmails.length > 0) {
+            for (const adminEmail of adminEmails) {
+                await (0, sendEmail_1.sendEmail)({
+                    to: adminEmail,
+                    subject: "📦 New Delivery Request from Customer",
+                    text: `
+New Delivery Request from Customer
+
+Customer Name: ${customer?.name}
+Customer Email: ${customer?.email}
+Customer Contact: ${customer?.phone}
+
+Pickup Address: ${pickupAddress}, ${pickupCity}, ${pickupState}
+Drop Address: ${dropAddress}, ${dropCity}, ${dropState}
+Load Type: ${loadType}
+Load Weight: ${loadWeight}
+
+-- Logistic Solution
+          `
+                });
+            }
+        }
+        // await sendEmail({
+        //   to: process.env.EMAIL_USER!,
+        //   subject: "New Delivery Request from Customer",
+        //   text: `Customer created a new request.
+        //   Details:
+        //     Customer Name:${customer?.name}
+        //     Customer Email:${customer?.email}
+        //     Customer Contact:${customer?.phone}
+        //   `,
+        // });
         return res.status(201).json({ success: true, message: "Request created successfully", request: newRequest });
     }
     catch (error) {
@@ -104,17 +128,44 @@ const acceptRequest = async (req, res) => {
         request.acceptedTruckId = truckId;
         await request.save();
         const customer = await userModel_1.default.findById(request.customerId).select("name email phone");
-        await (0, sendEmail_1.sendEmail)({
-            to: process.env.EMAIL_USER,
-            subject: "Request Accepted by Truck Owner",
-            text: `Truck Owner accepted a Request
-      Important Details:
-      - Request ID: ${request._id}
-      - Customer: ${customer?.name} (${customer?.phone || "No phone"})
-      - Truck Assigned: ${truck?.truckNumber || "Not assigned"} (${truck?.truckType || "N/A"})
+        // Get all admins
+        const admins = await userModel_1.default.find({ role: "admin" }).select("email");
+        const adminEmails = admins.map(a => a.email);
+        if (adminEmails.length > 0) {
+            await (0, sendEmail_1.sendEmail)({
+                to: adminEmails.join(","),
+                subject: "🚚 Request Accepted by Truck Owner",
+                text: `
+Dear Admin,
 
-      Please follow up accordingly.`,
-        });
+A truck owner has accepted a delivery request.
+
+Important Details:
+- Request ID: ${request._id}
+- Customer: ${customer?.name} (${customer?.phone || "No phone"})
+- Truck Assigned: ${truck?.truckNumber || "Not assigned"} (${truck?.truckType || "N/A"})
+- Pickup Location: ${request.pickupAddress}, ${request.pickupCity}, ${request.pickupState}
+- Drop Location: ${request.dropAddress}, ${request.dropCity}, ${request.dropState}
+- Load Type: ${request.loadType}
+- Load Weight: ${request.loadWeight}
+
+Please follow up accordingly.
+
+Best regards,
+Team Logistic Solution
+    `,
+            });
+        }
+        // await sendEmail({
+        //   to: process.env.EMAIL_USER!,
+        //   subject: "Request Accepted by Truck Owner",
+        //   text: `Truck Owner accepted a Request
+        //   Important Details:
+        //   - Request ID: ${request._id}
+        //   - Customer: ${customer?.name} (${customer?.phone || "No phone"})
+        //   - Truck Assigned: ${truck?.truckNumber || "Not assigned"} (${truck?.truckType || "N/A"})
+        //   Please follow up accordingly.`,
+        // });
         return res.status(200).json({ success: true, request });
     }
     catch (error) {

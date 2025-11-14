@@ -2,8 +2,8 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface ITruck extends Document {
   truckNumber: string;
-  truckType: "open" | "container" | "trailer" | "tanker" | "refrigerated";
-  capacity: number; 
+  truckType: "open" | "container" | "trailer" | "tanker" | "refrigerated" | "Heavy Commerical"|"Medium Commerical"|"Light Commerical";
+  capacity: string; 
   state: string;
   city: string;
   status: "available" | "busy" | "maintenance";
@@ -25,12 +25,12 @@ const truckSchema = new Schema<ITruck>(
     truckType: {
       type: String,
       required: [true, "Truck type is required"],
-      enum: ["open", "container", "trailer", "tanker", "refrigerated"],
+      enum: ["open", "container", "trailer", "tanker", "refrigerated","Heavy Commerical","Medium Commerical","Light Commerical"],
     },
     capacity: {
-      type: Number,
+      type: String,
       required: [true, "Truck capacity (in tons) is required"],
-      min: [1, "Capacity must be greater than 0"],
+    trim: true,
     },
     state: {
       type: String,

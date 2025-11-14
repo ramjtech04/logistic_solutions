@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 import {
   Alert,
   AlertDescription,
-  AlertTitle,
+  // AlertTitle,
 } from "@/components/ui/alert"
 
 export function OTPForm({
@@ -58,7 +58,7 @@ export function OTPForm({
       <Alert  className="bg-sky-100 mb-4">
      
         <AlertDescription>
-We've sent a 6-digit verification code to {email} Please check your inbox and spam folder.
+We&apos;ve sent a 6-digit verification code to {email} Please check your inbox and spam folder.
         </AlertDescription>
       </Alert>
       <div className="grid gap-6">

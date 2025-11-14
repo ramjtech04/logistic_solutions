@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import Link from "next/link";
 import { FaEye, FaTrashAlt } from "react-icons/fa";
-import { FaPen, FaUsersViewfinder } from "react-icons/fa6";
+import { FaPen } from "react-icons/fa6";
 
 
 // This type is used to define the shape of our data.
@@ -152,7 +152,7 @@ export const columns=(refreshTable: () => void): ColumnDef<Trucks>[] => [
  
   id: "actions",
   cell: ({ row }) => {
-    const role = localStorage.getItem("role");
+   localStorage.getItem("role");
     const handleDelete = async () => {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -162,7 +162,7 @@ export const columns=(refreshTable: () => void): ColumnDef<Trucks>[] => [
                console.log(token);
         }
  const url=process.env.NEXT_PUBLIC_URL_BASE;
-        const res = await fetch(`${url}api/trucks/deletetruck/${row.original._id}`, {
+         await fetch(`${url}api/trucks/deletetruck/${row.original._id}`, {
           method: "DElETE",
           headers: {
             "Content-Type": "application/json",

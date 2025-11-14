@@ -3,19 +3,15 @@
 import dynamic from "next/dynamic";
 const Navbar = dynamic(() => import('@/app/Components/Navbar'), { ssr: false });
 import { Button } from "@/components/ui/button";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { DeliveryStatus } from "./delivery-enums";
 
 interface Customer {
   _id: string;
   name: string;
   email: string;
 }
-export enum DeliveryStatus {
-  NotStarted = "NotStarted",
-  InTransit = "InTransit",
-  Delivered = "Delivered",
-  Failed = "Failed",
-}
+
 interface Truck {
   _id: string;
   truckNumber: string;
@@ -47,7 +43,7 @@ const AssignTruck = () => {
   const url = process.env.NEXT_PUBLIC_URL_BASE;
 
   // Fetch deliveries for logged-in truck owner
-  const fetchData = async () => {
+  const fetchData = useCallback( async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
@@ -61,11 +57,11 @@ const AssignTruck = () => {
     } catch (err) {
       console.error("Error fetching deliveries:", err);
     }
-  };
+  },[url]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const handleUpdateStatus = async (requestId: string, newStatus: DeliveryStatus) => {
   const token = localStorage.getItem("token");

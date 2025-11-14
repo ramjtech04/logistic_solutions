@@ -5,7 +5,7 @@ import { useState, useEffect, useId, memo } from "react"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MdEmail } from "react-icons/md"
-import { useRouter } from "next/navigation"
+import { useRouter  } from "next/navigation"
 import Image from "next/image"
 
 
@@ -21,8 +21,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+
+interface MenuProps {
+  role: string | null
+  handleLogout: () => void
+  router: ReturnType<typeof useRouter> 
+}
 // Memoized Mobile Menu
-const MobileMenu = memo(({ role, handleLogout, router }: any) => (
+const MobileMenu = memo(({ role, handleLogout, router }: MenuProps) => (
   <ul className="flex flex-col p-4 space-y-3">
     {role === null ? (
       <>
@@ -47,8 +53,10 @@ const MobileMenu = memo(({ role, handleLogout, router }: any) => (
   </ul>
 ))
 
+MobileMenu.displayName = "MobileMenu"
+
 // Memoized User Menu
-const UserMenu = memo(({ role, handleLogout, router }: any) => {
+const UserMenu = memo(({ role, handleLogout, router }: MenuProps) => {
   const triggerId = useId()
   return (
     <DropdownMenu>
@@ -73,6 +81,7 @@ const UserMenu = memo(({ role, handleLogout, router }: any) => {
     </DropdownMenu>
   )
 })
+UserMenu.displayName = "UserMenu"
 
 const Navbar = () => {
   const router = useRouter()

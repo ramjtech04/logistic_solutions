@@ -1,17 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { useCallback, useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+
 import { AppSidebar } from "@/components/ui/app-sidebar";
 import {
   Breadcrumb,
@@ -34,7 +25,7 @@ import { DataTables } from "../../data-table";
 export default function RequestDetailsPage() {
   const { status } = useParams(); // dynamic slug [lslug]
 const [data, setData] = useState<Loads[]>([]);
- const fetchData = async () =>{ 
+ const fetchData = useCallback( async () =>{
     const token = localStorage.getItem("token");
     if (!token) return;
 const url=process.env.NEXT_PUBLIC_URL_BASE;
@@ -54,7 +45,7 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
 //  availableRequest = (result.requests || []).filter(
 //       (truck: any) => truck.requestStatus?.toLowerCase() === status
 //     );
-   const availableRequest = requests.filter((req: any) => {
+   const availableRequest = requests.filter((req:  { requestStatus?: string; deliveryStatus?: string }) => {
         const requestStatus = req.requestStatus?.toLowerCase();
         const deliveryStatus = req.deliveryStatus?.toLowerCase();
         return requestStatus === slug || deliveryStatus === slug;
@@ -65,11 +56,11 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
 
     
     console.log("data",availableRequest)
-  };
+  },[status]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
   
 
  const tableColumns = ColumnsModule.columns(fetchData);

@@ -73,7 +73,7 @@ export const getAdmins = async (req: Request, res: Response) => {
 // Get all Customers
 export const getCustomers = async (req: Request, res: Response) => {
   try {
-    const users = await User.find({ role: "customer" }).select("-password");
+    const users = await User.find({ role: "customer" }).select("-password").sort({ _id: -1 });
     res.status(200).json({ success: true, data: users });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message || "Server error" });
@@ -81,12 +81,57 @@ export const getCustomers = async (req: Request, res: Response) => {
 };
 
 // Get all Truck Owners
+// export const getTruckOwners = async (req: Request, res: Response) => {
+//   try {
+//     const users = await User.find({ role: "truck_owner" }).select("-password");
+//     res.status(200).json({ success: true, data: users });
+//   } catch (error: any) {
+//     res.status(500).json({ success: false, message: error.message || "Server error" });
+//   }
+// };
 export const getTruckOwners = async (req: Request, res: Response) => {
   try {
-    const users = await User.find({ role: "truck_owner" }).select("-password");
-    res.status(200).json({ success: true, data: users });
+    const owners = await User.aggregate([
+      {
+        $match: { role: "truck_owner" }, // only truck owners
+      },
+      {
+        $lookup: {
+          from: "trucks", // collection name in MongoDB
+          localField: "_id", // user _id
+          foreignField: "truckOwnerId", // truck's owner ID
+          as: "trucks", // output array
+        },
+      },
+      {
+        $addFields: {
+          truckCount: { $size: "$trucks" }, // add truck count
+        },
+      },
+      {
+        $project: {
+          password: 0, // hide password field
+          __v: 0, // optional: hide version key
+        },
+        
+      },
+       {
+        $sort: { _id: -1 }, // ✅ newest owners first
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      message: "Truck owners fetched successfully with all trucks and truck count",
+      data: owners,
+    });
   } catch (error: any) {
-    res.status(500).json({ success: false, message: error.message || "Server error" });
+    console.error("Error fetching truck owners:", error.message);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Server error",
+      data: null,
+    });
   }
 };
 

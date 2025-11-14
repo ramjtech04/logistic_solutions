@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 
 export default function UserUpdated({mode,id}:{mode:string,id:string}) {
@@ -17,7 +17,7 @@ export default function UserUpdated({mode,id}:{mode:string,id:string}) {
     
       
           
-               const fetchData = async () => {
+               const fetchData = useCallback( async () => {
               
                   const token = localStorage.getItem("token");
                 
@@ -35,10 +35,10 @@ export default function UserUpdated({mode,id}:{mode:string,id:string}) {
            
                    setrole(result.data.role)
          
-                };
+                },[id]);
           
                 useEffect(() => {
-                fetchData();   }, []);
+                fetchData();   }, [fetchData]);
        const handleRegister = async (e: React.FormEvent) => {
              
              e.preventDefault();

@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  Card,CardAction,CardContent,CardDescription,CardFooter,CardHeader,CardTitle,} from "@/components/ui/card"
+  Card,CardContent,CardDescription,CardHeader,CardTitle,} from "@/components/ui/card"
 import Link from 'next/link'
 import Image from 'next/image'
 

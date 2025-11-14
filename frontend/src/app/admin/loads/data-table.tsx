@@ -32,12 +32,13 @@ import { Input } from "@/components/ui/input"
 
 import { GrStatusGood } from "react-icons/gr";
 import { LuSettings2 } from "react-icons/lu";
-import { FaCirclePlus, FaTruck } from "react-icons/fa6"
-import { request } from "http"
+import {  FaTruck } from "react-icons/fa6"
+// import { request } from "http"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
+
 
 export function DataTables<TData, TValue>({
   columns,
@@ -110,7 +111,9 @@ export function DataTables<TData, TValue>({
     >
       All
     </DropdownMenuCheckboxItem>
-    {Array.from(new Set(data.map((d: any) => d.requestStatus))).map((requestS) => (
+    {Array.from(new  Set(
+    data.map((d) => String((d as Record<string, unknown>)["requestStatus"]))
+  )).map((requestS) => (
   <DropdownMenuCheckboxItem
     key={requestS}
     checked={table.getColumn("requestStatus")?.getFilterValue() === requestS}
@@ -144,7 +147,9 @@ export function DataTables<TData, TValue>({
     >
       All
     </DropdownMenuCheckboxItem>
-    {Array.from(new Set(data.map((d: any) => d.deliveryStatus))).map((deliveryS) => (
+    {Array.from(new  Set(
+    data.map((d) => String((d as Record<string, unknown>)["requestStatus"]))
+  )).map((deliveryS) => (
   <DropdownMenuCheckboxItem
     key={deliveryS}
     checked={table.getColumn("deliveryStatus")?.getFilterValue() === deliveryS}

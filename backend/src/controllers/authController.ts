@@ -149,6 +149,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
     await Promise.all(
       adminEmails.map(adminEmail =>
+        
         sendEmail({
           to: adminEmail,
           subject: "User Login Alert – Logistic Solution",

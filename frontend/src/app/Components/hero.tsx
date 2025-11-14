@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 import Link from "next/link"
 
 const HeroBanner = () => {
@@ -18,7 +19,14 @@ const HeroBanner = () => {
 
     <div className=" relative z-10  ">
    {/* <img src="/ls.png" alt="image" className=" "  /> */}
-   <img src="indianbg1.png" alt="" />
+   {/* <img src="indianbg1.png" alt="" /> */}
+   <Image
+          src="/indianbg1.png" // Next.js optimized image
+          alt="Hero Banner"
+          width={600} // provide width
+          height={400} // provide height
+          className="object-cover"
+        />
     </div>
    
     {/* Content */}

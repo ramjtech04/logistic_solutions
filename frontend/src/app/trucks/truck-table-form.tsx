@@ -1,12 +1,12 @@
 "use client"
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Trucks } from './columns'
 import * as ColumnsModule from "./columns";
 import {  DataTables } from './data-table'
 
 const TrucksTableForm = () => {
       const [data, setData] = useState<Trucks[]>([]);
-     const fetchData = async () => {
+     const fetchData = useCallback( async () => {
         const token = localStorage.getItem("token");
        
         if (!token) return;
@@ -19,12 +19,12 @@ const TrucksTableForm = () => {
         const result = await res.json();
         console.log(result.data);
         setData(result.data);
-      };
+      },[]);
     
       useEffect(() => {
 
         fetchData();
-      }, []);
+      }, [fetchData]);
   
     //  const tableColumns = ColumnsModule.columns(fetchData);
     const tableColumns = useMemo(() => ColumnsModule.columns(fetchData), [fetchData]);

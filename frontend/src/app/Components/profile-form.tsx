@@ -74,6 +74,7 @@ const handleSubmit  =  async(e: React.FormEvent) => {
         
        
       } catch (err) {
+        console.log(err);
      
       }
   }

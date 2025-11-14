@@ -14,12 +14,12 @@ import { RequestStatus, DeliveryStatus } from "../enums/statusEnums";
 export const createRequest = async (req: Request, res: Response) => {
   try {
     const {
-      pickupState, pickupCity, pickupAddress,
+     customerId, pickupState, pickupCity, pickupAddress,
       dropState, dropCity, dropAddress,
       loadType, loadWeight
     } = req.body;
 
-    const customerId = req.user?.id;
+    // const customerId = req.user?.id;
     if (!customerId)
       return res.status(401).json({ success: false, message: "Unauthorized" });
 

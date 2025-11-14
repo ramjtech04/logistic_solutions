@@ -166,7 +166,7 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
   header: "Actions",
   cell: ({ row }) => {
     const date = new Date(row.original.createdAt);
-    const formatted = date.toLocaleDateString("en-GB", {
+     date.toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "short",
       year: "numeric",
@@ -185,7 +185,7 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
          const url=process.env.NEXT_PUBLIC_URL_BASE;
 
    
-        const res = await fetch( `${url}api/admin/requests/delete/${row.original._id}`, {
+        await fetch( `${url}api/admin/requests/delete/${row.original._id}`, {
           method: "DElETE",
           headers: {
             "Content-Type": "application/json",

@@ -1,5 +1,5 @@
 "use client"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import dynamic from "next/dynamic";
 import Link from "next/link"
@@ -28,7 +28,7 @@ export default function LoginPage() {
             Account Recovery
           </h1>
           <p className="text-muted-foreground text-xl">
-            Securely reset your password in three simple steps. We'll send you a
+            Securely reset your password in three simple steps. We&apos;ll send you a
             one-time password to verify your email, then you can set a new
             password for your account.
           </p>

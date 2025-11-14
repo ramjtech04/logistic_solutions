@@ -29,7 +29,7 @@ import {
 import { BsFuelPump } from "react-icons/bs";
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
-import { FaTruck,FaFilePdf,FaFileExcel, FaCheckCircle, FaWeightHanging } from "react-icons/fa";
+import { FaTruck,FaFilePdf,FaFileExcel, FaCheckCircle } from "react-icons/fa";
 import { LuSettings2 } from "react-icons/lu";
 import { exportToExcel } from "@/app/utils/exportToExcel"
 import { exportToPdf } from "@/app/utils/exportToPdf"
@@ -90,7 +90,7 @@ export function DataTables<TData, TValue>({
   variant="outline"
   onClick={() => {
     const rowsToExport = table.getRowModel().rows.map((row, index) => {
-      const exportedRow: Record<string, any> = {};
+      const exportedRow: Record<string,  string | number> = {};
 
       // Add SNO first
       exportedRow["SNO"] = index + 1;
@@ -98,7 +98,7 @@ export function DataTables<TData, TValue>({
       // Loop through all visible cells except UI-only columns
       row.getVisibleCells().forEach((cell) => {
         if (cell.column.id !== "actions"&& cell.column.id !== "sno") {
-          exportedRow[cell.column.id] = cell.getValue();
+          exportedRow[cell.column.id] = cell.getValue() as string | number;
         }
       });
 
@@ -110,7 +110,7 @@ export function DataTables<TData, TValue>({
       return exportedRow;
     });
 
-    exportToExcel(rowsToExport as any, "table-data.xlsx");
+    exportToExcel(rowsToExport , "table-data.xlsx");
   }}
 >
  <FaFileExcel /><span className="hidden sm:block">Export to</span>Excel
@@ -122,7 +122,7 @@ export function DataTables<TData, TValue>({
   onClick={() => {
     // 1️⃣ Prepare rows to export
     const rowsToExport = table.getRowModel().rows.map((row, index) => {
-      const exportedRow: Record<string, any> = {}
+      const exportedRow: Record<string, string|number> = {}
 
       // Add SNO column
       exportedRow["SNO"] = index + 1
@@ -130,7 +130,7 @@ export function DataTables<TData, TValue>({
       // Add only visible columns (skip UI-only columns)
       row.getVisibleCells().forEach((cell) => {
         if (cell.column.id !== "actions" && cell.column.id !== "sno") {
-          exportedRow[cell.column.id] = cell.getValue()
+          exportedRow[cell.column.id] = cell.getValue() as string|number
         }
       })
 
@@ -201,7 +201,7 @@ export function DataTables<TData, TValue>({
     >
       All
     </DropdownMenuCheckboxItem>
-    {Array.from(new Set(data.map((d: any) => d.fuelType))).map((fuel) => (
+    {Array.from(new Set(data.map((d: TData) => (d as Record<string, unknown>).fuelType as string))).map((fuel) => (
   <DropdownMenuCheckboxItem
     key={fuel}
     checked={table.getColumn("fuelType")?.getFilterValue() === fuel}
@@ -234,7 +234,7 @@ export function DataTables<TData, TValue>({
     >
       All
     </DropdownMenuCheckboxItem>
-    {Array.from(new Set(data.map((d: any) => d.truckType))).map((trucks) => (
+    {Array.from(new Set(data.map((d: TData) => (d as Record<string, unknown>).truckType as string))).map((trucks) => (
   <DropdownMenuCheckboxItem
     key={trucks}
     checked={table.getColumn("truckType")?.getFilterValue() === trucks}
@@ -270,7 +270,7 @@ export function DataTables<TData, TValue>({
     >
       All
     </DropdownMenuCheckboxItem>
-    {Array.from(new Set(data.map((d: any) => d.status))).map((status) => (
+    {Array.from(new Set(data.map((d: TData) => (d as Record<string, unknown>).status as string))).map((status) => (
   <DropdownMenuCheckboxItem
     key={status}
     checked={table.getColumn("status")?.getFilterValue() === status}

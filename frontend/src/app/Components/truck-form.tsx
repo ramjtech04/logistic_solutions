@@ -35,6 +35,11 @@ const AppSidebar = dynamic(() => import("@/components/ui/app-sidebar").then(mod 
 const Separator = dynamic(() => import("@/components/ui/separator").then(mod => mod.Separator), { ssr: false });
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 // import { AppSidebar } from "@/components/ui/app-sidebar"
+interface TruckOwner {
+  _id: string;
+  name: string;
+  phone: string;
+}
 const TruckForm = ({ id ,mode}: { id?: string,mode?:string }) => {
 
          const title = mode === "add" ? "Add Truck" : mode === "edit"  ? "Edit Truck" : "Truck Details";
@@ -50,7 +55,7 @@ const TruckForm = ({ id ,mode}: { id?: string,mode?:string }) => {
   const[fuelType ,setfueltype]=useState("");
     const[truckOwnerId ,settruckOwnerId]=useState("");
    
-            const [data, setData] = useState<any[]>([]);
+            const [data, setData] = useState<TruckOwner[]>([]);
 const role =localStorage.getItem("role")
 
      const fetchData = async () => {
@@ -174,6 +179,7 @@ const handleSubmit  =  async(e: React.FormEvent) => {
         
        
       } catch (err) {
+        console.log(err);
      
       }
   }
@@ -216,7 +222,7 @@ const handleSubmit  =  async(e: React.FormEvent) => {
                 <SelectContent>
                   {data.map((trucksOwner)=>(
 
-                     <SelectItem key={trucksOwner._id} value={String(trucksOwner._id)} >{trucksOwner.name}- {trucksOwner.phone}</SelectItem>
+                     <SelectItem key={trucksOwner._id} value={trucksOwner._id} >{trucksOwner.name}- {trucksOwner.phone}</SelectItem>
                   ))}
              
                </SelectContent>

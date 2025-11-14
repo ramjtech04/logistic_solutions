@@ -1,8 +1,8 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   Card,
-  CardAction,
+  // CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -12,12 +12,23 @@ import {
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { FaPen } from 'react-icons/fa6';
+interface Truck {
+  _id: string;
+  truckNumber: string;
+  truckType: string;
+  status: string;
+  capacity: string;
+  fuelType: string;
+  city: string;
+  state: string;
+}
+
 export default function Specific_trucks({ truck_owner }: { truck_owner: string }) {
    
-    const [data, setData] = useState<any[]>([]);
-    const role =localStorage.getItem("role")
+    const [data, setData] = useState<Truck[]>([]);
+    localStorage.getItem("role")
     
-         const fetchData = async () => {
+         const fetchData = useCallback( async () => {
         
             const token = localStorage.getItem("token");
           
@@ -31,7 +42,7 @@ export default function Specific_trucks({ truck_owner }: { truck_owner: string }
             console.log(result)
             setData(result?.data);
    
-          };
+          },[truck_owner]);
     
     
     
@@ -43,7 +54,7 @@ export default function Specific_trucks({ truck_owner }: { truck_owner: string }
                
               
          
-          }, []);
+          }, [fetchData]);
 
 
     

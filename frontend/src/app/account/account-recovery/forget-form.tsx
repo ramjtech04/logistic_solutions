@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import Link from "next/link"
+// import Link from "next/link"
 import { FiLoader } from "react-icons/fi";
 import Swal from 'sweetalert2'
 import {
@@ -82,7 +82,7 @@ const [loader ,setloader]=useState(false);
       <Alert  className="bg-sky-100 mb-4">
      
         <AlertDescription>
-         Enter the email address associated with your account. We'll send you a verification code.
+         Enter the email address associated with your account. We&apos;ll send you a verification code.
         </AlertDescription>
       </Alert>
       <div className="grid gap-6">

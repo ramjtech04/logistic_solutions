@@ -2,18 +2,18 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import Link from "next/link"
-import {CheckCircle2Icon } from "lucide-react"
+// import Link from "next/link"
+// import {CheckCircle2Icon } from "lucide-react"
 import Swal from 'sweetalert2'
 import {
   Alert,
   AlertDescription,
-  AlertTitle,
+  // AlertTitle,
 } from "@/components/ui/alert"
 import { useRouter } from "next/navigation"
 
 export function ResetPassword({
-    onNext,
+    // onNext,
     email,
   className,
   ...props

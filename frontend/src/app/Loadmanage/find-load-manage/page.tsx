@@ -19,13 +19,26 @@ interface FormData {
   dropcity: string;
 
 }
+interface Truck {
+  _id: string;
+  truckNumber: string;
+  truckType: string;
+}
 
+interface LoadRequest {
+  _id: string;
+  pickupCity: string;
+  dropCity: string;
+  loadType: string;
+  loadWeight: string;
+  createdAt: string;
+}
 const TruckForm: React.FC = () => {
-    const [data, setData] = useState<any[]>([]); 
-    const [filteredData, setFilteredData] = useState<any[]>([]);
+    const [data, setData] = useState<LoadRequest[]>([]); 
+    const [filteredData, setFilteredData] = useState<LoadRequest[]>([]);
     const router =useRouter();
 const [showTruckModal, setShowTruckModal] = useState(false);
-const [trucks, setTrucks] = useState<any[]>([]);
+const [trucks, setTrucks] = useState<Truck[]>([]);
 const [selectedTruck, setSelectedTruck] = useState<string>("");
 const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
@@ -61,7 +74,7 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
       fetchData();
     }
   }
-}, []);
+}, [router]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -70,9 +83,9 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSelectChange = (value: string, name: string) => {
-    setFormData({ ...formData, [name]: value });
-  };
+  // const handleSelectChange = (value: string, name: string) => {
+  //   setFormData({ ...formData, [name]: value });
+  // };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -255,7 +268,7 @@ setSelectedTruck("")
   <h2 className="text-xl font-semibold mb-4">Available Load Requests</h2>
   {filteredData.length > 0 ? (
     <ul className="space-y-4 grid grid-cols-1 md:grid-cols-3 gap-5">
-      {filteredData.map((request: any) => (
+      {filteredData.map((request: LoadRequest) => (
         <li key={request._id} className="p-4 border rounded shadow">
           <p><small className="text-gray-400">{formatDate(request.createdAt)}</small></p>
           <p><strong>Source Location:</strong>{request.pickupCity}</p>
@@ -284,7 +297,7 @@ setSelectedTruck("")
       className="flex flex-col space-y-2"
     >
       {trucks.length > 0 ? (
-        trucks.map((truck: any) => (
+        trucks.map((truck: Truck) => (
           <div key={truck._id} className="flex items-center space-x-2">
             <RadioGroupItem value={truck._id} id={truck._id} />
             <Label htmlFor={truck._id}>

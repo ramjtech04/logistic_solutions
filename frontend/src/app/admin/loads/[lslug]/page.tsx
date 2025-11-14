@@ -6,7 +6,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
+
   DialogFooter,
   DialogHeader,
   DialogOverlay,
@@ -34,18 +34,56 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+interface Customer {
+  name: string;
+  email: string;
+  phone: string;
+}
 
+interface TruckOwner {
+  _id: string;
+  name: string;
+  phone: string;
+  email:string;
+}
+
+interface Truck {
+  _id: string;
+  truckNumber: string;
+  truckType: string;
+  capacity: string;
+  status: string;
+}
+
+interface Request {
+  _id: string;
+  requestStatus: string;
+  deliveryStatus: string;
+  createdAt: string;
+  pickupState: string;
+  pickupCity: string;
+  pickupAddress: string;
+  dropState: string;
+  dropCity: string;
+  dropAddress: string;
+  loadType: string;
+  loadWeight: string | number;
+  customerId?: Customer;
+  acceptedByTruckOwnerId?: TruckOwner;
+  assignedTruckId?: Truck;
+  acceptedTruckId?: Truck;
+}
 
 export default function RequestDetailsPage() {
     const router =useRouter()
   const { lslug } = useParams(); // dynamic slug [lslug]
 
-  const [data, setData] = useState<any[]>([]);
-    const [truckOwners, setTruckOwners] = useState<any[]>([]);
+  const [data, setData] = useState<Request[]>([]);
+    const [truckOwners, setTruckOwners] = useState<TruckOwner[]>([]);
     const [selectedTruckOwner, setSelectedTruckOwner] = useState<string>("");
   const [loading, setLoading] = useState(true);
 const [Status,setStatus]=useState("");
-const [trucks, setTrucks] = useState<any[]>([]);
+const [trucks, setTrucks] = useState<Truck[]>([]);
 const [selectedTruck, setSelectedTruck] = useState<string>("");
 const [searchTerm, setSearchTerm] = useState("");
   const fetchData = async () => {
@@ -113,6 +151,7 @@ const [searchTerm, setSearchTerm] = useState("");
             
           }).then(() => {
 setStatus(updatedRequest.requestStatus);
+console.log("status"+Status);
 router.push('/admin/loads/loadrequest/approved')
           })
     
@@ -131,6 +170,7 @@ router.push('/admin/loads/loadrequest/approved')
           })
     }
   } catch (err) {
+    console.error(err);
   
     Swal.fire({
             title: "Error",
@@ -201,6 +241,7 @@ router.push('/admin/loads/loadrequest/cancelled')
           })
     }
   } catch (err) {
+    console.error(err);
   
  await   Swal.fire({
             title: "Error",
@@ -245,7 +286,7 @@ const fetchTrucksByOwner = async (ownerId: string) => {
         console.log(result);
      console.log(result)
          const availableTrucks = (result.data || []).filter(
-      (truck: any) => truck.status?.toLowerCase() === "available"
+      (truck: Truck) => truck.status?.toLowerCase() === "available"
     );
 
     setTrucks(availableTrucks);
@@ -491,7 +532,7 @@ Swal.close();
                   className="flex flex-col space-y-2"
                 >
                   {filteredTrucks.length > 0 ? (
-                    filteredTrucks.map((truck: any) => (
+                    filteredTrucks.map((truck: Truck) => (
                       <div key={truck._id} className="flex items-center space-x-2 ">
                         <RadioGroupItem value={truck._id} id={truck._id} />
                         <Label htmlFor={truck._id}>

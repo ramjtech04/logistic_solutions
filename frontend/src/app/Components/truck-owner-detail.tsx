@@ -1,12 +1,12 @@
 "use client"
-import { usePathname } from "next/navigation"
-import { useEffect } from "react";
+
+import { useCallback, useEffect } from "react";
 import TruckForm from "./truck-form";
 
 
 export default function TruckOwnerDetail({ id }: { id?: string }) {
-    const pathanme =usePathname()
-     const fetchData = async () => {
+ 
+     const fetchData =  useCallback( async () => {
             const token = localStorage.getItem("token");
          
             if (!token) return;
@@ -17,16 +17,12 @@ export default function TruckOwnerDetail({ id }: { id?: string }) {
         
             const result = await res.json();
             console.log(result);    
-            
-            // setname(result.data.name);
-            // setemail(result.data.email);
-            // setphone(result.data.phone);
-            // setrole(result.data.role);
-          };
+        
+          },[id]);
         
           useEffect(() => {
             fetchData();
-          }, []);
+          }, [fetchData]);
       return (
     <div>
      hello {id}
