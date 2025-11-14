@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {  Loads } from "./columns";
-import { DataTable } from "@/components/ui/data-tables";
+// import { DataTable } from "@/components/ui/data-tables";
 import * as ColumnsModule from "./columns";
 import {
   Breadcrumb,
@@ -13,6 +13,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Navbar from "@/app/Components/Navbar";
+import { DataTables } from "@/app/admin/loads/data-table";
 
 
 export default function GetLoadRequestPage() {
@@ -54,7 +55,7 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
               </BreadcrumbList>
             </Breadcrumb>
       
-            <DataTable columns={tableColumns} data={data} />
+            <DataTables columns={tableColumns} data={data} />
             </div>
           </>
   );
