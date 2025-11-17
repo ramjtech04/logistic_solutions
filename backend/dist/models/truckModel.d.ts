@@ -1,8 +1,8 @@
 import mongoose, { Document } from "mongoose";
 export interface ITruck extends Document {
     truckNumber: string;
-    truckType: "open" | "container" | "trailer" | "tanker" | "refrigerated";
-    capacity: number;
+    truckType: "open" | "container" | "trailer" | "tanker" | "refrigerated" | "Heavy Commerical" | "Medium Commerical" | "Light Commerical";
+    capacity: string;
     state: string;
     city: string;
     status: "available" | "busy" | "maintenance";

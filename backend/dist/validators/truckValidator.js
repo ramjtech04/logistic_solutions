@@ -10,12 +10,32 @@ exports.addTruckValidation = [
         .matches(truckNumberRegex).withMessage("Truck number must be valid (e.g., MHXXABXXXX)"),
     (0, express_validator_1.body)("truckType")
         .notEmpty().withMessage("Truck type is required")
-        .isIn(["open", "container", "trailer", "tanker", "refrigerated"])
+        .isIn(["open", "container", "trailer", "tanker", "refrigerated", "Heavy Commerical", "Medium Commerical", "Light Commerical"])
         .withMessage("Invalid truck type"),
     (0, express_validator_1.body)("capacity")
-        .notEmpty().withMessage("Capacity is required")
-        .isNumeric().withMessage("Capacity must be a number")
-        .custom((value) => value > 0).withMessage("Capacity must be positive"),
+        .notEmpty()
+        .withMessage("Capacity is required")
+        .custom((value) => {
+        // SINGLE NUMBER → "35"
+        if (/^\d+$/.test(value)) {
+            if (Number(value) <= 0) {
+                throw new Error("Capacity must be positive");
+            }
+            return true;
+        }
+        // RANGE → "25-40"
+        if (/^\d+-\d+$/.test(value)) {
+            const [min, max] = value.split("-").map(Number);
+            if (isNaN(min) || isNaN(max)) {
+                throw new Error("Invalid capacity ");
+            }
+            if (min <= 0 || max <= 0) {
+                throw new Error("Capacity values must be positive");
+            }
+            return true;
+        }
+        throw new Error("Capacity must be a positive number or range (e.g., 35 or 25-40)");
+    }),
     (0, express_validator_1.body)("state")
         .notEmpty().withMessage("State is required")
         .isLength({ min: 2 }).withMessage("State name too short"),
@@ -34,12 +54,31 @@ exports.updateTruckValidation = [
         .matches(truckNumberRegex).withMessage("Truck number must be valid (e.g., MH12AB1234)"),
     (0, express_validator_1.body)("truckType")
         .optional()
-        .isIn(["open", "container", "trailer", "tanker", "refrigerated"])
+        .isIn(["open", "container", "trailer", "tanker", "refrigerated", "Heavy Commerical", "Medium Commerical", "Light Commerical"])
         .withMessage("Invalid truck type"),
     (0, express_validator_1.body)("capacity")
-        .optional()
-        .isNumeric().withMessage("Capacity must be a number")
-        .custom((value) => value > 0).withMessage("Capacity must be positive"),
+        .notEmpty()
+        .withMessage("Capacity is required")
+        .custom((value) => {
+        // SINGLE NUMBER → "35"
+        if (/^\d+$/.test(value)) {
+            if (Number(value) <= 0) {
+                throw new Error("Capacity must be positive");
+            }
+            return true;
+        }
+        // RANGE → "25-40"
+        if (/^\d+-\d+$/.test(value)) {
+            const [min, max] = value.split("-").map(Number);
+            if (isNaN(min) || isNaN(max)) {
+                throw new Error("Invalid capacity ");
+            }
+            if (min <= 0 || max <= 0) {
+                throw new Error("Capacity values must be positive");
+            }
+            return true;
+        }
+    }),
     (0, express_validator_1.body)("state")
         .optional()
         .isLength({ min: 2 }).withMessage("State name too short"),

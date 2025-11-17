@@ -4,13 +4,13 @@ import connectDB from "./config/db";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 5000;
-
+// const PORT = process.env.PORT || 5000;
+const PORT: number = Number(process.env.PORT) || 5000;
 // Connect to MongoDB
 connectDB().then(() => {
   // Start Express server only after DB connection is successful
 
-  app.listen(PORT, () => {
+  app.listen(PORT,"0.0.0.0", () => {
     console.log(`Server running on port ${PORT}`);
   });
 }).catch((error) => {

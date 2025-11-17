@@ -12,8 +12,8 @@ const statusEnums_1 = require("../enums/statusEnums");
 //Create a new delivery request
 const createRequest = async (req, res) => {
     try {
-        const { pickupState, pickupCity, pickupAddress, dropState, dropCity, dropAddress, loadType, loadWeight } = req.body;
-        const customerId = req.user?.id;
+        const { customerId, pickupState, pickupCity, pickupAddress, dropState, dropCity, dropAddress, loadType, loadWeight } = req.body;
+        // const customerId = req.user?.id;
         if (!customerId)
             return res.status(401).json({ success: false, message: "Unauthorized" });
         const newRequest = new requestModel_1.default({

@@ -44,12 +44,12 @@ const truckSchema = new mongoose_1.Schema({
     truckType: {
         type: String,
         required: [true, "Truck type is required"],
-        enum: ["open", "container", "trailer", "tanker", "refrigerated"],
+        enum: ["open", "container", "trailer", "tanker", "refrigerated", "Heavy Commerical", "Medium Commerical", "Light Commerical"],
     },
     capacity: {
-        type: Number,
+        type: String,
         required: [true, "Truck capacity (in tons) is required"],
-        min: [1, "Capacity must be greater than 0"],
+        trim: true,
     },
     state: {
         type: String,
