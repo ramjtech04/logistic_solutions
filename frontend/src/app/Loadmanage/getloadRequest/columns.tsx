@@ -86,7 +86,9 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
         </Button>
       )
     },
-  },{
+  },
+  
+  {
     accessorKey:"createdAt",
      header: "Created At",
   cell: ({ row }) => {
