@@ -20,7 +20,8 @@ const app = (0, express_1.default)();
 // Middleware
 app.use((0, cors_1.default)({
     origin: "*",
-    methods: "GET,POST,PUT,DELETE",
+    methods: "GET,POST,PUT,DELETE,PATCH",
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
 }));
 app.use(express_1.default.json());

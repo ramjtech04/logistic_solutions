@@ -18,7 +18,7 @@ export const getAllRequests = async (req: Request, res: Response) => {
       .populate("acceptedByTruckOwnerId", "name email phone")
       .populate("acceptedTruckId", "truckNumber truckType capacity")
       .populate("assignedTruckId", "truckNumber truckType capacity")
-      .populate("approvedByAdminId", "name email");
+      .populate("approvedByAdminId", "name email").lean();;
 
     return res.status(200).json({ success: true, requests });
   } catch (error: any) {
@@ -35,7 +35,7 @@ export const getAcceptedRequests = async (req: Request, res: Response) => {
       .populate("customerId", "name email phone")
       .populate("acceptedByTruckOwnerId", "name email phone")
       .populate("acceptedTruckId", "truckNumber truckType capacity")
-      .populate("approvedByAdminId", "name email");
+      .populate("approvedByAdminId", "name email").lean();;
 
     return res.status(200).json({ success: true, requests });
   } catch (error: any) {

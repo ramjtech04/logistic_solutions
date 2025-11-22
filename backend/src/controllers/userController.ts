@@ -73,7 +73,7 @@ export const getAdmins = async (req: Request, res: Response) => {
 // Get all Customers
 export const getCustomers = async (req: Request, res: Response) => {
   try {
-    const users = await User.find({ role: "customer" }).select("-password").sort({ _id: -1 });
+    const users = await User.find({ role: "customer" }).select("-password").sort({ _id: -1 }).lean().exec();
     res.status(200).json({ success: true, data: users });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message || "Server error" });

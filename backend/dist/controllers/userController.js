@@ -74,7 +74,7 @@ exports.getAdmins = getAdmins;
 // Get all Customers
 const getCustomers = async (req, res) => {
     try {
-        const users = await userModel_1.default.find({ role: "customer" }).select("-password").sort({ _id: -1 });
+        const users = await userModel_1.default.find({ role: "customer" }).select("-password").sort({ _id: -1 }).lean().exec();
         res.status(200).json({ success: true, data: users });
     }
     catch (error) {
