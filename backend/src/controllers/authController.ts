@@ -323,3 +323,47 @@ export const resetPassword = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+export const sendEnquiry = async (req: Request, res: Response) => {
+  try {
+    const { name, email,phone, message } = req.body;
+
+    if (!name || !email || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    await sendEmail({
+      to: process.env.EMAIL_USER!, // admin email
+      subject: "New Enquiry – Logistics App",
+      text: `New enquiry received:`,
+      html: `
+        <div style="font-family: Arial, sans-serif;">
+          <h2 style="color:#991b1b;">New Enquiry Received</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Message:</strong></p>
+          <p style="background:#f9f9f9;padding:10px;border-radius:6px;">
+            ${message}
+          </p>
+          <p><strong>Time:</strong> ${new Date().toLocaleString("en-IN", {
+            timeZone: "Asia/Kolkata",
+          })}</p>
+          <hr />
+          <p>— Logistics App</p>
+        </div>
+      `,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Enquiry sent successfully",
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to send enquiry",
+    });
+  }
+};

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetPassword = exports.verifyOTP = exports.forgotPassword = exports.loginUser = exports.registerUser = void 0;
+exports.sendEnquiry = exports.resetPassword = exports.verifyOTP = exports.forgotPassword = exports.loginUser = exports.registerUser = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const crypto_1 = __importDefault(require("crypto"));
@@ -283,4 +283,47 @@ const resetPassword = async (req, res) => {
     }
 };
 exports.resetPassword = resetPassword;
+const sendEnquiry = async (req, res) => {
+    try {
+        const { name, email, phone, message } = req.body;
+        if (!name || !email || !message) {
+            return res.status(400).json({
+                success: false,
+                message: "All fields are required",
+            });
+        }
+        await (0, sendEmail_1.sendEmail)({
+            to: process.env.EMAIL_USER, // admin email
+            subject: "New Enquiry – Logistics App",
+            text: `New enquiry received:`,
+            html: `
+        <div style="font-family: Arial, sans-serif;">
+          <h2 style="color:#991b1b;">New Enquiry Received</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Message:</strong></p>
+          <p style="background:#f9f9f9;padding:10px;border-radius:6px;">
+            ${message}
+          </p>
+          <p><strong>Time:</strong> ${new Date().toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+            })}</p>
+          <hr />
+          <p>— Logistics App</p>
+        </div>
+      `,
+        });
+        return res.status(200).json({
+            success: true,
+            message: "Enquiry sent successfully",
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Failed to send enquiry",
+        });
+    }
+};
+exports.sendEnquiry = sendEnquiry;
 //# sourceMappingURL=authController.js.map
