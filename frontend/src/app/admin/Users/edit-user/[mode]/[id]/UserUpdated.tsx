@@ -136,6 +136,7 @@ export default function UserUpdated({mode,id}:{mode:string,id:string}) {
   <SelectContent>
     <SelectItem value="customer">customer</SelectItem>
     <SelectItem value="truck_owner">Truck Owner</SelectItem>
+        <SelectItem value="admin">Admin</SelectItem>
   </SelectContent>
 </Select>
         </div>

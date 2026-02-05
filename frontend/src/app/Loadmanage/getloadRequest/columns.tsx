@@ -95,7 +95,8 @@ export const columns=(refreshTable: () => void): ColumnDef<Loads>[] => [
     const date = new Date(row.original.createdAt);
     return date.toLocaleString(); // e.g. 24/09/2025, 10:30:45 AM
   },
-  }
+  },
+    
 
 
 ]

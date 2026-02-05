@@ -228,7 +228,7 @@ export function DataTable<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button className="bg-black hover:bg-black text-white ml-auto"><Link href='/Loadmanage/add-load-manage'>Add </Link></Button>
+        <Button className="bg-black hover:bg-black text-white ml-auto"><Link href='/admin/Users/add-user'>Add </Link></Button>
       </div>
 
     <div className="overflow-hidden rounded-md border hidden md:block">   

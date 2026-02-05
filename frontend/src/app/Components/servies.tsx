@@ -10,12 +10,17 @@ const ServicePage = () => {
   
   return (
     <>
-    <section className="bg-sky-50 p-2">
-    <div className="container mx-auto text-center grid grid-cols-1 md:grid-cols-3 gap-6 py-10">
-<Card className="">
+    <section className="md:py-24 p-2 bg-red-50" id="services">
+    <div className='flex flex-col  my-5 gap-3 items-center justify-center'>
+       <h1 className="text-4xl font-bold  text-red-800">Our Services</h1>
+       <p className=' md:w-2xl font-[500] text-sm md:text-xl text-center '>Our logistics services are designed to provide safe, fast, and cost-effective solutions for businesses of all sizes.</p>
+</div>
+    <div className="container  mx-auto text-center grid grid-cols-1 md:grid-cols-2 justify-center gap-6 py-10">
+     
+<Card className="border-red-800">
   <Link href={'/Loadmanage/add-load-manage'}>
  
-  <CardContent className='flex justify-center w-full'>
+  <CardContent className='flex   justify-center w-full'>
 
     <Image
       src="/add-load.png"                        
@@ -27,13 +32,13 @@ const ServicePage = () => {
 
   </CardContent>
   <CardHeader>
-    <CardTitle className='text-center'>Add Load</CardTitle>
+    <CardTitle className='text-center text-red-800'>Add Load</CardTitle>
     <CardDescription>Adding a load Detail connect with available trucks. </CardDescription>
   </CardHeader>
    </Link>
 </Card>
 
-       <Card className="" >
+       <Card className="border-red-800" >
   <Link href={'/Loadmanage/find-load-manage'}>
   <CardContent className='flex justify-center w-full'>
 
@@ -48,7 +53,7 @@ const ServicePage = () => {
 
   </CardContent>
   <CardHeader>
-    <CardTitle className='text-center'>Find Load</CardTitle>
+    <CardTitle className=' text-center text-red-800'>Find Load</CardTitle>
     <CardDescription>Load aviable for Your Truck </CardDescription>
    
   </CardHeader>

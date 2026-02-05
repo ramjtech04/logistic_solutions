@@ -136,8 +136,8 @@ export const columns=(refreshTable: () => void): ColumnDef<User>[] => [
         }else{
                console.log(token);
         }
-
-        await fetch(`http://localhost:5000/api/users/${row.original._id}`, {
+          const url=process.env.NEXT_PUBLIC_URL_BASE;
+        await fetch(`${url}api/users/${row.original._id}`, {
           method: "DElETE",
           headers: {
             "Content-Type": "application/json",

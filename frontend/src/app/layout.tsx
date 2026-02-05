@@ -15,6 +15,22 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Logistic Solution",
   description: "Logistic Solution",
+   keywords: [
+    "logistic solutions","Logistic Solution",
+    "transportation services",
+    "freight services",
+    "supply chain solutions",
+    "logistics services in India",
+  ],robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+
+  
  
 };
 
