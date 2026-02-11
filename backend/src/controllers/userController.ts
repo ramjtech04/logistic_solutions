@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import User,{ IUser } from "../models/userModel";
-
+import logger from "../utils/logger";
 //CREATE
 // Admin creates user 
 export const createUserByAdmin = async (req: Request, res: Response) => {
@@ -126,7 +126,7 @@ export const getTruckOwners = async (req: Request, res: Response) => {
       data: owners,
     });
   } catch (error: any) {
-    console.error("Error fetching truck owners:", error.message);
+    logger.error("Error fetching truck owners:", error.message);
     res.status(500).json({
       success: false,
       message: error.message || "Server error",

@@ -1,18 +1,26 @@
 import nodemailer from "nodemailer";
 import User from "../models/userModel";
-
+import logger from "./logger";
 interface EmailOptions {
   to: string;
   subject: string;
   text: string;
   html?: string; 
+  sendToAdmins?: boolean;
+
 }
 
-export const sendEmail = async ({ to, subject, text, html }: EmailOptions) => {
+export const sendEmail = async ({ to, subject, text, html,  sendToAdmins = false  }: EmailOptions) => {
   try {
+    // agar adminEmails exist kare
+let adminEmails: string[] = [];
+if(sendToAdmins) {
+  const admins = await User.find({ role: "admin" }).select("email");
+  adminEmails = admins.map(a => a.email);
+}
     // Create transporter
-      const admins = await User.find({ role: "admin" }).select("email");
-    const adminEmails = admins.map(a => a.email);
+        //   const admins = await User.find({ role: "admin" }).select("email");
+        // const adminEmails = admins.map(a => a.email);
 
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",  
@@ -32,7 +40,7 @@ export const sendEmail = async ({ to, subject, text, html }: EmailOptions) => {
     const mailOptions = {
       from: `"Logistics App" <${process.env.EMAIL_USER}>`,
       to,
-      bcc: adminEmails,
+     ...(sendToAdmins && { bcc: adminEmails.join(",") }),
       subject,
       text,
       html: html || `<div>${text}</div>`, 
@@ -40,11 +48,11 @@ export const sendEmail = async ({ to, subject, text, html }: EmailOptions) => {
 
     // Send email
     await transporter.verify();
-    console.log("SMTP connection verified");
+    logger.info("SMTP connection verified");
     await transporter.sendMail(mailOptions);
-    console.log(` Email sent to ${to}`);
+    logger.info(`Email sent to ${to}`);
   } catch (error) {
-    console.error(" Error sending email:", error);
+    logger.error("Error sending email:", error);
     throw new Error("Email could not be sent");
   }
 };

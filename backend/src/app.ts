@@ -10,6 +10,8 @@ import truckRoutes from "./routes/truckRoutes";
 import requestRoutes from "./routes/requestRoutes";
 import adminRoutes from "./routes/adminRoutes";
 import deliveryRoutes from "./routes/deliveryRoutes";
+
+
 dotenv.config();
 
 const app: Application = express();

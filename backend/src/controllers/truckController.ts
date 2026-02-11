@@ -7,7 +7,7 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import Truck from "../models/truckModel";
-
+import logger from "../utils/logger";
 // ADD TRUCK
 export const addTruck = async (req: Request, res: Response) => {
   try {
@@ -167,7 +167,7 @@ export const getTrucksByOwner = async (req: Request, res: Response) => {
 
     res.status(200).json({ success: true, message: "Trucks fetched successfully", data: trucks });
   } catch (error: any) {
-    console.error("Error fetching trucks by owner:", error.message);
+    logger.error("Error fetching trucks by owner:", error.message);
     res.status(500).json({ success: false, message: error.message || "Server error", data: null });
   }
 };

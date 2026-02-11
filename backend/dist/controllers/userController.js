@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteMe = exports.updateMe = exports.getMe = exports.getUserById = exports.deleteUser = exports.updateUserByAdmin = exports.getTruckOwners = exports.getCustomers = exports.getAdmins = exports.createUserByAdmin = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const userModel_1 = __importDefault(require("../models/userModel"));
+const logger_1 = __importDefault(require("../utils/logger"));
 //CREATE
 // Admin creates user 
 const createUserByAdmin = async (req, res) => {
@@ -127,7 +128,7 @@ const getTruckOwners = async (req, res) => {
         });
     }
     catch (error) {
-        console.error("Error fetching truck owners:", error.message);
+        logger_1.default.error("Error fetching truck owners:", error.message);
         res.status(500).json({
             success: false,
             message: error.message || "Server error",

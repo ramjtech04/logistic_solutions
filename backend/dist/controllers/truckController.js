@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTrucksByOwner = exports.deleteTruck = exports.updateTruck = exports.getTruckById = exports.getTrucks = exports.addTruck = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const truckModel_1 = __importDefault(require("../models/truckModel"));
+const logger_1 = __importDefault(require("../utils/logger"));
 // ADD TRUCK
 const addTruck = async (req, res) => {
     try {
@@ -154,7 +155,7 @@ const getTrucksByOwner = async (req, res) => {
         res.status(200).json({ success: true, message: "Trucks fetched successfully", data: trucks });
     }
     catch (error) {
-        console.error("Error fetching trucks by owner:", error.message);
+        logger_1.default.error("Error fetching trucks by owner:", error.message);
         res.status(500).json({ success: false, message: error.message || "Server error", data: null });
     }
 };

@@ -3,7 +3,7 @@ import RequestModel from "../models/requestModel";
 import Truck from "../models/truckModel"; 
 import { Types } from "mongoose";
 import { DeliveryStatus } from "../enums/statusEnums";
-
+import logger from "../utils/logger";
 /**
  * Update delivery status (Admin or Truck Owner)
  * PATCH /api/delivery/updatestatus/:id
@@ -40,7 +40,7 @@ export const updateDeliveryStatus = async (req: Request, res: Response) => {
 }
     return res.status(200).json({ success: true, request });
   } catch (error: any) {
-    console.error("Error updating delivery status:", error.message);
+    logger.error("Error updating delivery status:", error.message);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
@@ -66,7 +66,7 @@ export const getMyDeliveries = async (req: Request, res: Response) => {
 
     return res.status(200).json({ success: true, deliveries });
   } catch (error: any) {
-    console.error("Error fetching deliveries:", error.message);
+    logger.error("Error fetching deliveries:", error.message);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
@@ -98,7 +98,7 @@ export const getDeliveryStatus = async (req: Request, res: Response) => {
       request,
     });
   } catch (error: any) {
-    console.error("Error fetching delivery status:", error.message);
+    logger.error("Error fetching delivery status:", error.message);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };

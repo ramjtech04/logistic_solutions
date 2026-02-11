@@ -10,7 +10,7 @@ const validateRequest_1 = require("../middleware/validateRequest");
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const router = (0, express_1.Router)();
 const forgotPasswordLimiter = (0, express_rate_limit_1.default)({
-    windowMs: 30 * 60 * 1000, // 15 minutes
+    windowMs: 15 * 60 * 1000, // 15 minutes
     max: 5,
     message: { message: "Too many requests, try again after 15 minutes" },
     standardHeaders: true,

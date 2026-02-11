@@ -1,8 +1,3 @@
-//get all requests irrespective of status
-//get those request that have status=Accepted
-//Approve a request
-//Reject a request
-//Manually assign truck to request
 import mongoose from "mongoose";
 import { Request, Response } from "express";
 import RequestModel from "../models/requestModel";
@@ -10,7 +5,7 @@ import Truck from "../models/truckModel";
 import { sendEmail } from "../utils/sendEmail";
 import { RequestStatus } from "../enums/statusEnums";
 import { updateRequestStatus } from "../services/statusService";
-
+import logger from "../utils/logger";
 export const getAllRequests = async (req: Request, res: Response) => {
   try {
     const requests = await RequestModel.find()
@@ -22,7 +17,7 @@ export const getAllRequests = async (req: Request, res: Response) => {
 
     return res.status(200).json({ success: true, requests });
   } catch (error: any) {
-    console.error("Error fetching all requests:", error.message);
+    logger.error("Error fetching all requests:", error.message);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
@@ -39,7 +34,7 @@ export const getAcceptedRequests = async (req: Request, res: Response) => {
 
     return res.status(200).json({ success: true, requests });
   } catch (error: any) {
-    console.error("Error fetching accepted requests:", error.message);
+    logger.error("Error fetching accepted requests:", error.message);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
@@ -106,7 +101,7 @@ Please coordinate with the customer to proceed further.`,
 
     return res.status(200).json({ success: true, request: updatedRequest });
   } catch (error: any) {
-    console.error("Error approving request:", error.message);
+    logger.error("Error approving request:", error.message);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
@@ -174,7 +169,7 @@ export const rejectRequest = async (req: Request, res: Response) => {
 
     return res.status(200).json({ success: true, request: updatedRequest });
   } catch (error: any) {
-    console.error("Error rejecting request:", error.message);
+    logger.error("Error rejecting request:", error.message);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
@@ -286,7 +281,7 @@ Please coordinate with the customer to proceed further.`,
 
     return res.status(200).json({ success: true, request: responseData });
   } catch (error: any) {
-    console.error("Error in manual assignment:", error.message);
+    logger.error("Error in manual assignment:", error.message);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
@@ -316,7 +311,7 @@ export const deleteRequest = async (req: Request, res: Response) => {
 
     return res.status(200).json({ success: true, message: "Request deleted successfully" });
   } catch (error: any) {
-    console.error("Error deleting request:", error.message);
+    logger.error("Error deleting request:", error.message);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };

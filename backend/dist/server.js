@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 const app_1 = __importDefault(require("./app"));
 const db_1 = __importDefault(require("./config/db"));
+const logger_1 = __importDefault(require("./utils/logger"));
 dotenv_1.default.config();
 // const PORT = process.env.PORT || 5000;
 const PORT = Number(process.env.PORT) || 5000;
@@ -13,10 +14,11 @@ const PORT = Number(process.env.PORT) || 5000;
 (0, db_1.default)().then(() => {
     // Start Express server only after DB connection is successful
     app_1.default.listen(PORT, "0.0.0.0", () => {
-        console.log(`Server running on port ${PORT}`);
+        logger_1.default.info(`Server running on port ${PORT}`);
+        // console.log(`Server running on port ${PORT}`);
     });
 }).catch((error) => {
-    console.error("Failed to connect to MongoDB:", error);
+    logger_1.default.error("Failed to connect to MongoDB:", error);
     process.exit(1);
 });
 //# sourceMappingURL=server.js.map

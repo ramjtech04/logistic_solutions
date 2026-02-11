@@ -8,6 +8,7 @@ const requestModel_1 = __importDefault(require("../models/requestModel"));
 const truckModel_1 = __importDefault(require("../models/truckModel"));
 const mongoose_1 = require("mongoose");
 const statusEnums_1 = require("../enums/statusEnums");
+const logger_1 = __importDefault(require("../utils/logger"));
 /**
  * Update delivery status (Admin or Truck Owner)
  * PATCH /api/delivery/updatestatus/:id
@@ -42,7 +43,7 @@ const updateDeliveryStatus = async (req, res) => {
         return res.status(200).json({ success: true, request });
     }
     catch (error) {
-        console.error("Error updating delivery status:", error.message);
+        logger_1.default.error("Error updating delivery status:", error.message);
         return res.status(500).json({ success: false, message: "Server error" });
     }
 };
@@ -66,7 +67,7 @@ const getMyDeliveries = async (req, res) => {
         return res.status(200).json({ success: true, deliveries });
     }
     catch (error) {
-        console.error("Error fetching deliveries:", error.message);
+        logger_1.default.error("Error fetching deliveries:", error.message);
         return res.status(500).json({ success: false, message: "Server error" });
     }
 };
@@ -96,7 +97,7 @@ const getDeliveryStatus = async (req, res) => {
         });
     }
     catch (error) {
-        console.error("Error fetching delivery status:", error.message);
+        logger_1.default.error("Error fetching delivery status:", error.message);
         return res.status(500).json({ success: false, message: "Server error" });
     }
 };

@@ -5,7 +5,7 @@ import crypto from "crypto";
 import User from "../models/userModel";
 import PasswordResetOTP from "../models/passwordResetOtp";
 import { sendEmail } from "../utils/sendEmail";
-
+import logger from "../utils/logger";
 
 // Helper to generate JWT with role included
 const generateToken = (id: string, role: string): string => {
@@ -41,34 +41,25 @@ export const registerUser = async (req: Request, res: Response) => {
 
     // send email only if role is customer or truck_owner
     if (user && (user.role === "customer" || user.role === "truck_owner")) {
-       const admins = await User.find({ role: "admin" }).select("email");
+         await sendEmail({
+        to: process.env.EMAIL_USER!,
+        subject: "New User Registration Notification",
+        text: `New User Registration Notification.`,
+        html: `<h3>New User Registration Alert</h3>
+        <p>A new user has just registered on the Logistic Solution platform.</p>
+        <h4>User Details:</h4>
+        <ul>
+        <li><strong>Name:</strong> ${user.name}</li>
+        <li><strong>Email:</strong> ${user.email}</li>
+        <li><strong>Phone:</strong> ${user.phone}</li>
+        <li><strong>Role:</strong> ${user.role.toUpperCase()}</li>
+        </ul><p>Registration  Time: ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>
+        <p>This is an automated notification from Logistic Solution.</p>`,
+        sendToAdmins:true
+ 
 
-      if (admins.length > 0) {
-        const adminEmails = admins.map((a) => a.email);
-
-        // send to each admin
-        await Promise.all(
-          adminEmails.map((adminEmail) =>
-            sendEmail({
-              to: adminEmail,
-              subject: "New User Registration Notification",
-              text: `
-              Dear Admin,
-A new user has successfully registered on the Logistic Solution platform. Below are the details:
-
-Name: ${user.name}
-Email: ${user.email}
-Phone: ${user.phone}
-Role: ${user.role.toUpperCase()}
-
-
-
-Best regards,  
-The Logistic Solutions Team`,
-            })
-          )
-        );
-      }
+      });
+  
     }
 
     //Response
@@ -142,44 +133,24 @@ export const loginUser = async (req: Request, res: Response) => {
 
     // send email only if role is customer or truck_owner
     if (user.role === "customer" || user.role === "truck_owner") {
-       const admins = await User.find({ role: "admin" }).select("email");
+        await sendEmail({
+        to: process.env.EMAIL_USER!,
+        subject: "User Logged In",
+        text: `User logged in on the platform.`,
+        html: `<h3>User Login Alert</h3>
+        <p>A user has just logged into the Logistic Solution platform.</p>
+        <h4>User Details:</h4>
+        <ul>
+        <li><strong>Name:</strong> ${user.name}</li>
+        <li><strong>Email:</strong> ${user.email}</li>
+        <li><strong>Phone:</strong> ${user.phone}</li>
+        <li><strong>Role:</strong> ${user.role.toUpperCase()}</li>
+        </ul><p>Login Time: ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</p>
+        <p>This is an automated notification from Logistic Solution.</p>`,
+        sendToAdmins:true
+ 
 
-  if (admins.length > 0) {
-    const adminEmails = admins.map(a => a.email);
-
-    await Promise.all(
-      adminEmails.map(adminEmail =>
-        
-        sendEmail({
-          to: adminEmail,
-          subject: "User Login Alert – Logistic Solution",
-          text: `Dear Admin,
-
-A user has just logged into the Logistic Solution platform.
-
-User Details:
-Name: ${user.name}
-Email: ${user.email}
-Role: ${user.role.toUpperCase()}
-Login Time: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
-
-This is an automated notification from Logistic Solution.
-
-Best regards,
-Team Logistic Solution`
-        })
-      )
-    );
-  }
-//       await sendEmail({
-//         to: process.env.EMAIL_USER!,
-//         subject: "User Logged In",
-//         text: `User logged in on the platform.
-// Name: ${user.name}
-// Email: ${user.email}
-// Phone: ${user.phone}
-// Role: ${user.role}`,
-//       });
+      });
     }
 
     // always return success response
@@ -241,7 +212,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "OTP sent to email" });
   } catch (error) {
-    console.error("Forgot Password Error:", error);
+    logger.error("Forgot Password Error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -286,7 +257,7 @@ export const verifyOTP = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "OTP verified successfully" });
   } catch (error) {
-    console.error("Verify OTP Error:", error);
+    logger.error("Verify OTP Error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -319,7 +290,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Password reset successful" });
   } catch (error) {
-    console.error("Reset Password Error:", error);
+    logger.error("Reset Password Error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -354,6 +325,7 @@ export const sendEnquiry = async (req: Request, res: Response) => {
           <p>— Logistics App</p>
         </div>
       `,
+      sendToAdmins:true
     });
 
     return res.status(200).json({

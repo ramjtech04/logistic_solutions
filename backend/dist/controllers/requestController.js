@@ -9,6 +9,7 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 const truckModel_1 = __importDefault(require("../models/truckModel"));
 const sendEmail_1 = require("../utils/sendEmail");
 const statusEnums_1 = require("../enums/statusEnums");
+const logger_1 = __importDefault(require("../utils/logger"));
 //Create a new delivery request
 const createRequest = async (req, res) => {
     try {
@@ -26,44 +27,29 @@ const createRequest = async (req, res) => {
         });
         await newRequest.save();
         const customer = await userModel_1.default.findById(customerId).select("name email phone");
-        const admins = await userModel_1.default.find({ role: "admin" }).select("email");
-        const adminEmails = admins.map(a => a.email);
-        if (adminEmails.length > 0) {
-            for (const adminEmail of adminEmails) {
-                await (0, sendEmail_1.sendEmail)({
-                    to: adminEmail,
-                    subject: "📦 New Delivery Request from Customer",
-                    text: `
-New Delivery Request from Customer
-
-Customer Name: ${customer?.name}
-Customer Email: ${customer?.email}
-Customer Contact: ${customer?.phone}
-
-Pickup Address: ${pickupAddress}, ${pickupCity}, ${pickupState}
-Drop Address: ${dropAddress}, ${dropCity}, ${dropState}
-Load Type: ${loadType}
-Load Weight: ${loadWeight}
-
--- Logistic Solution
-          `
-                });
-            }
-        }
-        // await sendEmail({
-        //   to: process.env.EMAIL_USER!,
-        //   subject: "New Delivery Request from Customer",
-        //   text: `Customer created a new request.
-        //   Details:
-        //     Customer Name:${customer?.name}
-        //     Customer Email:${customer?.email}
-        //     Customer Contact:${customer?.phone}
-        //   `,
-        // });
+        await (0, sendEmail_1.sendEmail)({
+            to: process.env.EMAIL_USER,
+            subject: "📦 New Delivery Request from Customer",
+            text: `
+New Delivery Request from Customer `,
+            html: `
+          <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+            <h2 style="color: #007BFF;">📦 New Delivery Request from Customer</h2
+            <p><strong>Customer Name:</strong> ${customer?.name}</p
+            <p><strong>Customer Email:</strong> ${customer?.email}</p
+              
+            <p><strong>Customer Contact:</strong> ${customer?.phone}</p
+            <p><strong>Pickup Address:</strong> ${pickupAddress}, ${pickupCity}, ${pickupState}</p
+            <p><strong>Drop Address:</strong> ${dropAddress}, ${dropCity}, ${dropState}</p
+            <p><strong>Load Type:</strong> ${loadType}</p
+            <p><strong>Load Weight:</strong> ${loadWeight}</p
+            `,
+            sendToAdmins: true
+        });
         return res.status(201).json({ success: true, message: "Request created successfully", request: newRequest });
     }
     catch (error) {
-        console.error("Error creating request:", error.message);
+        logger_1.default.error("Error creating request:", error.message);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -82,7 +68,7 @@ const getMyRequests = async (req, res) => {
         return res.status(200).json({ success: true, requests });
     }
     catch (error) {
-        console.error("Error fetching customer requests:", error.message);
+        logger_1.default.error("Error fetching customer requests:", error.message);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -95,7 +81,7 @@ const getPendingRequests = async (req, res) => {
         return res.status(200).json({ success: true, requests });
     }
     catch (error) {
-        console.error("Error fetching available requests:", error.message);
+        logger_1.default.error("Error fetching available requests:", error.message);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -129,47 +115,34 @@ const acceptRequest = async (req, res) => {
         await request.save();
         const customer = await userModel_1.default.findById(request.customerId).select("name email phone");
         // Get all admins
-        const admins = await userModel_1.default.find({ role: "admin" }).select("email");
-        const adminEmails = admins.map(a => a.email);
-        if (adminEmails.length > 0) {
-            await (0, sendEmail_1.sendEmail)({
-                to: adminEmails.join(","),
-                subject: "🚚 Request Accepted by Truck Owner",
-                text: `
-Dear Admin,
+        await (0, sendEmail_1.sendEmail)({
+            to: process.env.EMAIL_USER,
+            subject: "🚚 Request Accepted by Truck Owner",
+            text: `Truck Owner accepted a Request`,
+            html: `
+    <div style="font-family: Arial, sans-serif; line-height: 1.5; color: #333;">
+      <h2 style="color: #007BFF;">🚚 Request Accepted by Truck Owner</h2
+      <p>Dear Admin,</p>
+      <p>A truck owner has accepted a delivery request.</p>
+      <h3>Important Details:</h3>
+      <ul>
 
-A truck owner has accepted a delivery request.
-
-Important Details:
-- Request ID: ${request._id}
-- Customer: ${customer?.name} (${customer?.phone || "No phone"})
-- Truck Assigned: ${truck?.truckNumber || "Not assigned"} (${truck?.truckType || "N/A"})
-- Pickup Location: ${request.pickupAddress}, ${request.pickupCity}, ${request.pickupState}
-- Drop Location: ${request.dropAddress}, ${request.dropCity}, ${request.dropState}
-- Load Type: ${request.loadType}
-- Load Weight: ${request.loadWeight}
-
-Please follow up accordingly.
-
-Best regards,
-Team Logistic Solution
-    `,
-            });
-        }
-        // await sendEmail({
-        //   to: process.env.EMAIL_USER!,
-        //   subject: "Request Accepted by Truck Owner",
-        //   text: `Truck Owner accepted a Request
-        //   Important Details:
-        //   - Request ID: ${request._id}
-        //   - Customer: ${customer?.name} (${customer?.phone || "No phone"})
-        //   - Truck Assigned: ${truck?.truckNumber || "Not assigned"} (${truck?.truckType || "N/A"})
-        //   Please follow up accordingly.`,
-        // });
+        <li><strong>Request ID:</strong> ${request._id}</li>
+        <li><strong>Customer:</strong> ${customer?.name} (${customer?.phone || "No phone"})</li>
+        <li><strong>Truck Assigned:</strong> ${truck?.truckNumber || "Not assigned"} (${truck?.truckType || "N/A"})</li>
+        <li><strong>Pickup Location:</strong> ${request.pickupAddress}, ${request.pickupCity}, ${request.pickupState}</li>
+        <li><strong>Drop Location:</strong> ${request.dropAddress}, ${request.dropCity}, ${request.dropState}</li>
+        <li><strong>Load Type:</strong> ${request.loadType}</li>
+        <li><strong>Load Weight:</strong> ${request.loadWeight}</li>
+      </ul>
+      <p>Please follow up accordingly.</p>
+        `,
+            sendToAdmins: true
+        });
         return res.status(200).json({ success: true, request });
     }
     catch (error) {
-        console.error("Error accepting request:", error.message);
+        logger_1.default.error("Error accepting request:", error.message);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -185,7 +158,7 @@ const getMyAvailableTrucks = async (req, res) => {
         return res.status(200).json({ success: true, trucks });
     }
     catch (error) {
-        console.error("Error fetching available trucks:", error.message);
+        logger_1.default.error("Error fetching available trucks:", error.message);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
