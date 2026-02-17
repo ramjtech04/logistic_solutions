@@ -41,6 +41,7 @@ const addTruck = async (req, res) => {
         res.status(201).json({ success: true, message: "Truck added successfully", data: truck });
     }
     catch (error) {
+        logger_1.default.error("Error in addTruck ", error);
         res.status(500).json({ success: false, message: error.message || "Server error", data: null });
     }
 };
@@ -70,6 +71,7 @@ const getTrucks = async (req, res) => {
         res.status(200).json({ success: true, message: "Trucks fetched successfully", data: trucks });
     }
     catch (error) {
+        logger_1.default.error("Error getTrucks Controller ", error);
         res.status(500).json({ success: false, message: error.message || "Server error", data: null });
     }
 };
@@ -91,6 +93,7 @@ const getTruckById = async (req, res) => {
         res.status(200).json({ success: true, message: "Truck fetched successfully", data: truck });
     }
     catch (error) {
+        logger_1.default.error("Error getTruckById ", error);
         res.status(500).json({ success: false, message: error.message || "Server error", data: null });
     }
 };
@@ -112,6 +115,7 @@ const updateTruck = async (req, res) => {
         res.status(200).json({ success: true, message: "Truck updated successfully", data: updatedTruck });
     }
     catch (error) {
+        logger_1.default.error("Error in updateTruck", error);
         res.status(500).json({ success: false, message: error.message || "Server error", data: null });
     }
 };
@@ -133,6 +137,7 @@ const deleteTruck = async (req, res) => {
         res.status(200).json({ success: true, message: "Truck deleted successfully", data: null });
     }
     catch (error) {
+        logger_1.default.error("Error in deleteTruck controller", error);
         res.status(500).json({ success: false, message: error.message || "Server error", data: null });
     }
 };
@@ -155,7 +160,7 @@ const getTrucksByOwner = async (req, res) => {
         res.status(200).json({ success: true, message: "Trucks fetched successfully", data: trucks });
     }
     catch (error) {
-        logger_1.default.error("Error fetching trucks by owner:", error.message);
+        logger_1.default.error("Error fetching trucks by owner:", error);
         res.status(500).json({ success: false, message: error.message || "Server error", data: null });
     }
 };

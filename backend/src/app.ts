@@ -12,6 +12,8 @@ import adminRoutes from "./routes/adminRoutes";
 import deliveryRoutes from "./routes/deliveryRoutes";
 
 
+
+
 dotenv.config();
 
 const app: Application = express();
@@ -43,4 +45,7 @@ app.get("/", (req: Request, res: Response) => {
 
 // Error Handler Middleware
 app.use(errorHandler);
+
+
+
 export default app;

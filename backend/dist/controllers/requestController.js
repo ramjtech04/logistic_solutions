@@ -49,7 +49,7 @@ New Delivery Request from Customer `,
         return res.status(201).json({ success: true, message: "Request created successfully", request: newRequest });
     }
     catch (error) {
-        logger_1.default.error("Error creating request:", error.message);
+        logger_1.default.error("Error creating request:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -68,7 +68,7 @@ const getMyRequests = async (req, res) => {
         return res.status(200).json({ success: true, requests });
     }
     catch (error) {
-        logger_1.default.error("Error fetching customer requests:", error.message);
+        logger_1.default.error("Error fetching customer requests:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -81,7 +81,7 @@ const getPendingRequests = async (req, res) => {
         return res.status(200).json({ success: true, requests });
     }
     catch (error) {
-        logger_1.default.error("Error fetching available requests:", error.message);
+        logger_1.default.error("Error fetching available requests:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -142,7 +142,7 @@ const acceptRequest = async (req, res) => {
         return res.status(200).json({ success: true, request });
     }
     catch (error) {
-        logger_1.default.error("Error accepting request:", error.message);
+        logger_1.default.error("Error accepting request:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -158,7 +158,7 @@ const getMyAvailableTrucks = async (req, res) => {
         return res.status(200).json({ success: true, trucks });
     }
     catch (error) {
-        logger_1.default.error("Error fetching available trucks:", error.message);
+        logger_1.default.error("Error fetching available trucks:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };

@@ -51,6 +51,7 @@ const createUserByAdmin = async (req, res) => {
         });
     }
     catch (error) {
+        logger_1.default.error("Error user controller createUserByAdmin", error);
         res.status(500).json({
             success: false,
             message: error.message || "Server error",
@@ -68,6 +69,7 @@ const getAdmins = async (req, res) => {
         res.status(200).json({ success: true, data: users });
     }
     catch (error) {
+        logger_1.default.error("Error user controller getAdmins", error);
         res.status(500).json({ success: false, message: error.message || "Server error" });
     }
 };
@@ -79,6 +81,7 @@ const getCustomers = async (req, res) => {
         res.status(200).json({ success: true, data: users });
     }
     catch (error) {
+        logger_1.default.error("Error user controller getCustomers", error);
         res.status(500).json({ success: false, message: error.message || "Server error" });
     }
 };
@@ -128,7 +131,7 @@ const getTruckOwners = async (req, res) => {
         });
     }
     catch (error) {
-        logger_1.default.error("Error fetching truck owners:", error.message);
+        logger_1.default.error("Error fetching truck owners:", error);
         res.status(500).json({
             success: false,
             message: error.message || "Server error",
@@ -177,6 +180,7 @@ const updateUserByAdmin = async (req, res) => {
         });
     }
     catch (error) {
+        logger_1.default.error("Error user controller UpdatedUserBYAdmin", error);
         res.status(500).json({
             success: false,
             message: error.message || "Server error",
@@ -205,6 +209,7 @@ const deleteUser = async (req, res) => {
         });
     }
     catch (error) {
+        logger_1.default.error("Error user controller deleteUser", error);
         res.status(500).json({
             success: false,
             message: error.message || "Server error",
@@ -242,6 +247,7 @@ const getUserById = async (req, res) => {
         });
     }
     catch (error) {
+        logger_1.default.error("Error user controller getUserById", error);
         res.status(500).json({
             success: false,
             message: error.message || "Server error",
@@ -270,6 +276,7 @@ const getMe = async (req, res) => {
         });
     }
     catch (error) {
+        logger_1.default.error("Error user controller GetMe", error);
         res.status(500).json({
             success: false,
             message: error.message || "Server error",
@@ -302,6 +309,7 @@ const updateMe = async (req, res) => {
         });
     }
     catch (error) {
+        logger_1.default.error("Error user controller UpdateMe", error);
         res.status(500).json({
             success: false,
             message: error.message || "Server error",
@@ -330,6 +338,7 @@ const deleteMe = async (req, res) => {
         });
     }
     catch (error) {
+        logger_1.default.error("Error user controller DeleteMe", error);
         res.status(500).json({
             success: false,
             message: error.message || "Server error",

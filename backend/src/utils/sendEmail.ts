@@ -48,9 +48,9 @@ if(sendToAdmins) {
 
     // Send email
     await transporter.verify();
-    logger.info("SMTP connection verified");
+    // logger.info("SMTP connection verified");
     await transporter.sendMail(mailOptions);
-    logger.info(`Email sent to ${to}`);
+    // logger.info(`Email sent to ${to}`);
   } catch (error) {
     logger.error("Error sending email:", error);
     throw new Error("Email could not be sent");

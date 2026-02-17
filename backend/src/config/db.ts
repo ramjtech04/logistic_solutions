@@ -8,10 +8,11 @@ const connectDB = async (): Promise<void> => {
     }
 
     await mongoose.connect(mongoUri);
-    logger.info("MongoDB connected successfully");
+    
+    console.log("MongoDB connected successfully");
   } catch (error: any) {
-    logger.error("MongoDB connection failed:", error.message);
-    process.exit(1); // Stop the server if DB fails
+    logger.error("MongoDB connection failed:", error);
+    // process.exit(1); // Stop the server if DB fails
   }
 };
 

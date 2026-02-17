@@ -12,6 +12,9 @@ export const updateRequestStatus = async (
     adminId,
   }: { truckOwnerId?: string; truckId?: string; adminId?: string } = {}
 ) => {
+  try{
+
+  
   const request = await Request.findById(requestId);
   if (!request) throw new Error("Request not found");
 
@@ -35,4 +38,9 @@ export const updateRequestStatus = async (
 
   await request.save();
   return request;
+}catch
+(error: any){
+  throw new Error(error || "Failed to update request status");
+}
+
 };

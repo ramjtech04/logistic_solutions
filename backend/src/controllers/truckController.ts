@@ -45,6 +45,7 @@ export const addTruck = async (req: Request, res: Response) => {
 
     res.status(201).json({ success: true, message: "Truck added successfully", data: truck });
   } catch (error: any) {
+    logger.error("Error in addTruck ",error)
     res.status(500).json({ success: false, message: error.message || "Server error", data: null });
   }
 };
@@ -73,6 +74,7 @@ export const getTrucks = async (req: Request, res: Response) => {
     const trucks = await Truck.find(filters);
     res.status(200).json({ success: true, message: "Trucks fetched successfully", data: trucks });
   } catch (error: any) {
+     logger.error("Error getTrucks Controller ",error);
     res.status(500).json({ success: false, message: error.message || "Server error", data: null });
   }
 };
@@ -96,6 +98,7 @@ export const getTruckById = async (req: Request, res: Response) => {
 
     res.status(200).json({ success: true, message: "Truck fetched successfully", data: truck });
   } catch (error: any) {
+    logger.error("Error getTruckById ",error);
     res.status(500).json({ success: false, message: error.message || "Server error", data: null });
   }
 };
@@ -118,6 +121,7 @@ export const updateTruck = async (req: Request, res: Response) => {
     const updatedTruck = await Truck.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.status(200).json({ success: true, message: "Truck updated successfully", data: updatedTruck });
   } catch (error: any) {
+    logger.error("Error in updateTruck",error)
     res.status(500).json({ success: false, message: error.message || "Server error", data: null });
   }
 };
@@ -140,6 +144,7 @@ export const deleteTruck = async (req: Request, res: Response) => {
     await truck.deleteOne();
     res.status(200).json({ success: true, message: "Truck deleted successfully", data: null });
   } catch (error: any) {
+    logger.error("Error in deleteTruck controller",error)
     res.status(500).json({ success: false, message: error.message || "Server error", data: null });
   }
 };
@@ -167,7 +172,7 @@ export const getTrucksByOwner = async (req: Request, res: Response) => {
 
     res.status(200).json({ success: true, message: "Trucks fetched successfully", data: trucks });
   } catch (error: any) {
-    logger.error("Error fetching trucks by owner:", error.message);
+    logger.error("Error fetching trucks by owner:", error);
     res.status(500).json({ success: false, message: error.message || "Server error", data: null });
   }
 };

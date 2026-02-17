@@ -43,7 +43,7 @@ const updateDeliveryStatus = async (req, res) => {
         return res.status(200).json({ success: true, request });
     }
     catch (error) {
-        logger_1.default.error("Error updating delivery status:", error.message);
+        logger_1.default.error("Error updating delivery status:", error);
         return res.status(500).json({ success: false, message: "Server error" });
     }
 };
@@ -67,7 +67,7 @@ const getMyDeliveries = async (req, res) => {
         return res.status(200).json({ success: true, deliveries });
     }
     catch (error) {
-        logger_1.default.error("Error fetching deliveries:", error.message);
+        logger_1.default.error("Error fetching deliveries:", error);
         return res.status(500).json({ success: false, message: "Server error" });
     }
 };
@@ -97,7 +97,7 @@ const getDeliveryStatus = async (req, res) => {
         });
     }
     catch (error) {
-        logger_1.default.error("Error fetching delivery status:", error.message);
+        logger_1.default.error("Error fetching delivery status:", error);
         return res.status(500).json({ success: false, message: "Server error" });
     }
 };

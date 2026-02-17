@@ -23,7 +23,7 @@ const getAllRequests = async (req, res) => {
         return res.status(200).json({ success: true, requests });
     }
     catch (error) {
-        logger_1.default.error("Error fetching all requests:", error.message);
+        logger_1.default.error("Error fetching all requests:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -41,7 +41,7 @@ const getAcceptedRequests = async (req, res) => {
         return res.status(200).json({ success: true, requests });
     }
     catch (error) {
-        logger_1.default.error("Error fetching accepted requests:", error.message);
+        logger_1.default.error("Error fetching accepted requests:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -99,7 +99,7 @@ Please coordinate with the customer to proceed further.`,
         return res.status(200).json({ success: true, request: updatedRequest });
     }
     catch (error) {
-        logger_1.default.error("Error approving request:", error.message);
+        logger_1.default.error("Error approving request:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -157,7 +157,7 @@ const rejectRequest = async (req, res) => {
         return res.status(200).json({ success: true, request: updatedRequest });
     }
     catch (error) {
-        logger_1.default.error("Error rejecting request:", error.message);
+        logger_1.default.error("Error rejecting request:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -253,7 +253,7 @@ Please coordinate with the customer to proceed further.`,
         return res.status(200).json({ success: true, request: responseData });
     }
     catch (error) {
-        logger_1.default.error("Error in manual assignment:", error.message);
+        logger_1.default.error("Error in manual assignment:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };
@@ -279,7 +279,7 @@ const deleteRequest = async (req, res) => {
         return res.status(200).json({ success: true, message: "Request deleted successfully" });
     }
     catch (error) {
-        logger_1.default.error("Error deleting request:", error.message);
+        logger_1.default.error("Error deleting request:", error);
         return res.status(500).json({ success: false, message: "Server Error" });
     }
 };

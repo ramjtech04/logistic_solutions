@@ -92,6 +92,7 @@ const registerUser = async (req, res) => {
                 });
             }
         }
+        logger_1.default.error("Error registerUser", error);
         res.status(500).json({
             success: false,
             message: error.message || "Server error",
@@ -154,6 +155,7 @@ const loginUser = async (req, res) => {
         });
     }
     catch (error) {
+        logger_1.default.error("Error auth controller loginUser", error);
         res.status(500).json({
             success: false,
             message: error.message || "Server error",
@@ -300,6 +302,7 @@ const sendEnquiry = async (req, res) => {
         });
     }
     catch (error) {
+        logger_1.default.error("Send Enquiry Error:", error);
         return res.status(500).json({
             success: false,
             message: error.message || "Failed to send enquiry",

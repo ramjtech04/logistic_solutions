@@ -14,8 +14,8 @@ const PORT = Number(process.env.PORT) || 5000;
 (0, db_1.default)().then(() => {
     // Start Express server only after DB connection is successful
     app_1.default.listen(PORT, "0.0.0.0", () => {
-        logger_1.default.info(`Server running on port ${PORT}`);
-        // console.log(`Server running on port ${PORT}`);
+        //  logger.info(`Server running on port ${PORT}`);
+        console.log(`Server running on port ${PORT}`);
     });
 }).catch((error) => {
     logger_1.default.error("Failed to connect to MongoDB:", error);

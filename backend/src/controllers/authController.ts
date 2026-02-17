@@ -94,6 +94,7 @@ export const registerUser = async (req: Request, res: Response) => {
         });
       }
     }
+    logger.error("Error registerUser",error)
     res.status(500).json({
       success: false,
       message: error.message || "Server error",
@@ -167,6 +168,7 @@ export const loginUser = async (req: Request, res: Response) => {
       },
     });
   } catch (error: any) {
+       logger.error("Error auth controller loginUser",error)
     res.status(500).json({
       success: false,
       message: error.message || "Server error",
@@ -333,6 +335,7 @@ export const sendEnquiry = async (req: Request, res: Response) => {
       message: "Enquiry sent successfully",
     });
   } catch (error: any) {
+    logger.error("Send Enquiry Error:", error);
     return res.status(500).json({
       success: false,
       message: error.message || "Failed to send enquiry",

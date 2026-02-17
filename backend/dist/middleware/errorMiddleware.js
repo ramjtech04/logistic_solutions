@@ -6,11 +6,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.errorHandler = void 0;
 const logger_1 = __importDefault(require("../utils/logger"));
 const errorHandler = (err, req, res, next) => {
-    // console.error("Error:", err.stack || err.message);
-    logger_1.default.error(err.message, err);
-    res.status(err.statusCode || 500).json({
+    const statusCode = err.statusCode || 500;
+    logger_1.default.error("API Error", {
+        message: err.message,
+        stack: err.stack,
+        statusCode,
+        method: req.method,
+        url: req.originalUrl,
+        ip: req.ip,
+        params: req.params,
+        query: req.query,
+        body: req.body,
+        user: req.user || null,
+    });
+    res.status(statusCode).json({
         success: false,
-        message: err.message || "Server Error",
+        message: process.env.NODE_ENV === "production"
+            ? "Internal Server Error"
+            : err.message,
     });
 };
 exports.errorHandler = errorHandler;

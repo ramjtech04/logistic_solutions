@@ -63,7 +63,7 @@ New Delivery Request from Customer `,
 
     return res.status(201).json({ success: true, message: "Request created successfully", request: newRequest });
   } catch (error: any) {
-    logger.error("Error creating request:", error.message);
+    logger.error("Error creating request:", error);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
@@ -83,7 +83,7 @@ export const getMyRequests = async (req: Request, res: Response) => {
 
     return res.status(200).json({ success: true, requests });
   } catch (error: any) {
-    logger.error("Error fetching customer requests:", error.message);
+    logger.error("Error fetching customer requests:", error);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
@@ -96,7 +96,7 @@ export const getPendingRequests = async (req: Request, res: Response) => {
 
     return res.status(200).json({ success: true, requests });
   } catch (error: any) {
-    logger.error("Error fetching available requests:", error.message);
+    logger.error("Error fetching available requests:", error);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
@@ -167,7 +167,7 @@ export const acceptRequest = async (req: Request, res: Response) => {
 
     return res.status(200).json({ success: true, request });
   } catch (error: any) {
-    logger.error("Error accepting request:", error.message);
+    logger.error("Error accepting request:", error);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
@@ -184,7 +184,7 @@ export const getMyAvailableTrucks = async (req: Request, res: Response) => {
 
     return res.status(200).json({ success: true, trucks });
   } catch (error: any) {
-    logger.error("Error fetching available trucks:", error.message);
+    logger.error("Error fetching available trucks:", error);
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };

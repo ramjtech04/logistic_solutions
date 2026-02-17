@@ -12,11 +12,11 @@ const connectDB = async () => {
             throw new Error("MONGO_URI is not defined in environment variables");
         }
         await mongoose_1.default.connect(mongoUri);
-        logger_1.default.info("MongoDB connected successfully");
+        console.log("MongoDB connected successfully");
     }
     catch (error) {
-        logger_1.default.error("MongoDB connection failed:", error.message);
-        process.exit(1); // Stop the server if DB fails
+        logger_1.default.error("MongoDB connection failed:", error);
+        // process.exit(1); // Stop the server if DB fails
     }
 };
 exports.default = connectDB;

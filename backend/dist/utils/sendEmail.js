@@ -41,9 +41,9 @@ const sendEmail = async ({ to, subject, text, html, sendToAdmins = false }) => {
         };
         // Send email
         await transporter.verify();
-        logger_1.default.info("SMTP connection verified");
+        // logger.info("SMTP connection verified");
         await transporter.sendMail(mailOptions);
-        logger_1.default.info(`Email sent to ${to}`);
+        // logger.info(`Email sent to ${to}`);
     }
     catch (error) {
         logger_1.default.error("Error sending email:", error);

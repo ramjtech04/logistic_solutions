@@ -4,39 +4,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const winston_1 = __importDefault(require("winston"));
-const winston_daily_rotate_file_1 = __importDefault(require("winston-daily-rotate-file"));
 const logger = winston_1.default.createLogger({
-    level: "info",
-    format: winston_1.default.format.combine(winston_1.default.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), winston_1.default.format.errors({ stack: true }), winston_1.default.format.splat(), winston_1.default.format.json()),
+    level: "error", // Only error level
+    format: winston_1.default.format.combine(winston_1.default.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), winston_1.default.format.errors({ stack: true }), winston_1.default.format.printf(({ level, message, timestamp, stack }) => {
+        return `${timestamp} [${level}]: ${stack || message}`;
+    })),
     transports: [
-        // Console transport (for dev)
-        new winston_1.default.transports.Console({
-            format: winston_1.default.format.combine(winston_1.default.format.colorize(), winston_1.default.format.simple()),
-        }),
-        // Error log file
-        new winston_daily_rotate_file_1.default({
-            filename: "logs/error-%DATE%.log",
-            datePattern: "YYYY-MM-DD",
+        // Single error file
+        new winston_1.default.transports.File({
+            filename: "logs/error.log",
             level: "error",
-            maxSize: "20m",
-            maxFiles: "14d",
         }),
-        // Combined log file
-        new winston_daily_rotate_file_1.default({
-            filename: "logs/combined-%DATE%.log",
-            datePattern: "YYYY-MM-DD",
-            maxSize: "20m",
-            maxFiles: "14d",
+        // Optional: Console (remove if not needed)
+        new winston_1.default.transports.Console({
+            level: "error",
         }),
     ],
     exitOnError: false,
 });
+// Handle unhandled errors
 process.on("unhandledRejection", (err) => {
-    logger.error("Unhandled Rejection", err);
+    logger.error("Unhandled Rejection: " + err);
 });
 process.on("uncaughtException", (err) => {
-    logger.error("Uncaught Exception", err);
-    process.exit(1); // let PM2 restart safely
+    logger.error("Uncaught Exception: " + err);
+    process.exit(1);
 });
 exports.default = logger;
 //# sourceMappingURL=logger.js.map

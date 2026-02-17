@@ -50,6 +50,7 @@ export const createUserByAdmin = async (req: Request, res: Response) => {
       },
     });
   } catch (error: any) {
+          logger.error("Error user controller createUserByAdmin",error)
     res.status(500).json({
       success: false,
       message: error.message || "Server error",
@@ -66,6 +67,7 @@ export const getAdmins = async (req: Request, res: Response) => {
     const users = await User.find({ role: "admin" }).select("-password");
     res.status(200).json({ success: true, data: users });
   } catch (error: any) {
+       logger.error("Error user controller getAdmins",error)
     res.status(500).json({ success: false, message: error.message || "Server error" });
   }
 };
@@ -76,6 +78,7 @@ export const getCustomers = async (req: Request, res: Response) => {
     const users = await User.find({ role: "customer" }).select("-password").sort({ _id: -1 }).lean().exec();
     res.status(200).json({ success: true, data: users });
   } catch (error: any) {
+     logger.error("Error user controller getCustomers",error)
     res.status(500).json({ success: false, message: error.message || "Server error" });
   }
 };
@@ -126,7 +129,7 @@ export const getTruckOwners = async (req: Request, res: Response) => {
       data: owners,
     });
   } catch (error: any) {
-    logger.error("Error fetching truck owners:", error.message);
+    logger.error("Error fetching truck owners:", error);
     res.status(500).json({
       success: false,
       message: error.message || "Server error",
@@ -178,6 +181,7 @@ export const updateUserByAdmin = async (req: Request, res: Response) => {
       data: updatedUser,
     });
   } catch (error: any) {
+     logger.error("Error user controller UpdatedUserBYAdmin",error)
     res.status(500).json({
       success: false,
       message: error.message || "Server error",
@@ -207,12 +211,14 @@ export const deleteUser = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error: any) {
+     logger.error("Error user controller deleteUser",error)
     res.status(500).json({
       success: false,
       message: error.message || "Server error",
       data: null,
     });
   }
+  
 };
 
 // Get single user by ID 
@@ -244,6 +250,7 @@ if (!req.user) return res.status(401).json({ success: false, message: "Unauthori
       data: user,
     });
   } catch (error: any) {
+      logger.error("Error user controller getUserById",error)
     res.status(500).json({
       success: false,
       message: error.message || "Server error",
@@ -274,6 +281,7 @@ export const getMe = async (req: Request, res: Response) => {
       data: user,
     });
   } catch (error: any) {
+      logger.error("Error user controller GetMe",error)
     res.status(500).json({
       success: false,
       message: error.message || "Server error",
@@ -308,6 +316,7 @@ export const updateMe = async (req: Request, res: Response) => {
       data: updatedUser,
     });
   } catch (error: any) {
+      logger.error("Error user controller UpdateMe",error)
     res.status(500).json({
       success: false,
       message: error.message || "Server error",
@@ -337,6 +346,7 @@ export const deleteMe = async (req: Request, res: Response) => {
       data: null,
     });
   } catch (error: any) {
+    logger.error("Error user controller DeleteMe",error)
     res.status(500).json({
       success: false,
       message: error.message || "Server error",
