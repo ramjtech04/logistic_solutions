@@ -115,6 +115,7 @@ const Navbar = () => {
           <div className="text-xs md:text-base"><FaLocationDot className="inline mr-1" />H.NO. 10, SECTOR-9, FARIDABAD-121006, HARYANA</div>
           <a href="tel:+919873245859" className="text-xs md:text-base"><FaPhoneAlt className="inline mr-1 " />+91-9873245859, +91-9310068263</a>
           <a href="mailto:shreeradheylogistic2025@gmail.com" className="text-xs md:text-base"> <MdEmail className="inline mr-1" />shreeradheylogistic2025@gmail.com</a>
+        <a href="mailto:srl@shreeradheylogistic.com" className="text-xs md:text-base"> <MdEmail className="inline mr-1" />srl@shreeradheylogistic.com</a>
         </div>
       </div>
 
@@ -137,6 +138,7 @@ const Navbar = () => {
           <div className="text-xs md:text-md w-full text-end"><FaLocationDot className="inline mr-1" />H.NO. 10, SECTOR-9, FARIDABAD-121006, HARYANA</div>
           <a href="tel:+919873245859" className="text-xs md:text-md"><FaPhoneAlt className="inline mr-1 " />+91-9873245859, +91-9310068263</a>
           <a href="mailto:shreeradheylogistic2025@gmail.com" className="text-xs md:text-md"> <MdEmail className="inline mr-1" />shreeradheylogistic2025@gmail.com</a>
+                  <a href="mailto:srl@shreeradheylogistic.com" className="text-xs md:text-md"> <MdEmail className="inline mr-1" />srl@shreeradheylogistic.com</a>
         </div>
       </div>
 

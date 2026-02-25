@@ -39,7 +39,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Install PM2 globally
 npm install -g pm2
 ## Start
-pm2 start ecosystem.config.js --only app
+pm2 start ecosystem.config.js
 
 ## Restart
 pm2 restart app

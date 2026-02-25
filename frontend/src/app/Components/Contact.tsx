@@ -103,8 +103,7 @@ const Contact: React.FC = () => {
            <FaPhone size={20}  color='#fff'/>   +91-9873245859, +91-9310068263
           </Link>
           <Link href='#' className=' flex justify-start items-center gap-2 font-[600]  text-md'>
-         <FaMailBulk color='#fff' size={20} /> shreeradheylogistic2025@gmail.com
-          </Link>
+         <FaMailBulk color='#fff' size={20} /> shreeradheylogistic2025@gmail.com / srl@shreeradheylogistic.com</Link>
          
         </div>
         </div>

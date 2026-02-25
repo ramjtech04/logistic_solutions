@@ -49,8 +49,11 @@ At Logistic Solution, we specialize in efficient logistics and transportation se
           <Link href='#' className=' flex justify-start items-center gap-2 font-[600] text-md'>
            <FaPhone size={20}  color='blue'/>   +91-9873245859, +91-9310068263
           </Link>
-          <Link href='#' className=' flex justify-start items-center gap-2 font-[600]  text-md'>
+          <Link href='mailto:shreeradheylogistic2025@gmail.com' className=' flex justify-start items-center gap-2 font-[600]  text-md'>
          <FaMailBulk color='green' size={20} /> shreeradheylogistic2025@gmail.com
+          </Link>
+            <Link href='mailto:srl@shreeradheylogistic.com' className=' flex justify-start items-center gap-2 font-[600]  text-md'>
+         <FaMailBulk color='green' size={20} /> srl@shreeradheylogistic.com
           </Link>
          
         </div>

@@ -6,6 +6,7 @@ import Image from 'next/image'
 
 
 
+
 const ServicePage = () => {
   
   return (
@@ -15,7 +16,7 @@ const ServicePage = () => {
        <h1 className="text-4xl font-bold  text-red-800">Our Services</h1>
        <p className=' md:w-2xl font-[500] text-sm md:text-xl text-center '>Our logistics services are designed to provide safe, fast, and cost-effective solutions for businesses of all sizes.</p>
 </div>
-    <div className="container  mx-auto text-center grid grid-cols-1 md:grid-cols-2 justify-center gap-6 py-10">
+    <div className="container  mx-auto text-center grid grid-cols-1 md:grid-cols-3 justify-center gap-6 py-10">
      
 <Card className="border-red-800">
   <Link href={'/Loadmanage/add-load-manage'}>
@@ -60,6 +61,27 @@ const ServicePage = () => {
   </Link>
 </Card>
  
+       <Card className="border-red-800" >
+  <Link href={'/Gps'}>
+  <CardContent className='flex justify-center w-full'>
+
+    
+    <Image
+      src="/img/Gps.png"                        
+      alt="Gps"
+      className='h-25 '
+      width={100}
+      height={25}
+    />
+
+  </CardContent>
+  <CardHeader>
+    <CardTitle className=' text-center text-red-800'>GPS</CardTitle>
+    <CardDescription>Track Your Truck </CardDescription>
+   
+  </CardHeader>
+  </Link>
+</Card>
     </div>
     </section>
     </>
