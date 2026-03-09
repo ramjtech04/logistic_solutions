@@ -7,6 +7,7 @@ import {
   Command,
    TruckElectric,
   Users2,
+  Wrench,
 } from "lucide-react"
 
 import { NavMain } from "@/components/ui/nav-main"
@@ -114,7 +115,23 @@ const data = {
         },
        
       ],
+    },{
+      title: "Maintenance",
+      url: "/maintenance/list",
+      icon: Wrench,
+      items: [
+      {
+          title: "Add Maintenance",
+          url: "/maintenance/add",
+
     },
+        {
+          title: "Maintenance List",
+          url: "/maintenance/list",
+        },
+       
+      ],
+    }
    
   ],
   navSecondary: [

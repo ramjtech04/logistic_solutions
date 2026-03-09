@@ -27,38 +27,8 @@ interface MenuProps {
   handleLogout: () => void
   router: ReturnType<typeof useRouter> 
 }
-// Memoized Mobile Menu
-// const MobileMenu = memo(({ role, handleLogout, router }: MenuProps) => (
-//   <ul className="flex flex-col p-4 space-y-3">
-//     {role === null ? (
-//       <>
-      
-//         <Button onClick={() => router.push("/account/register")} className="w-full">Register</Button>
-//         <Button variant="outline" onClick={() => router.push("/account/login")} className="w-full">Login</Button>
-        
-         
-//       </>
-//     ) : (
-//       <>
-//         <li className="p-2 cursor-pointer hover:text-red-800 font-bold" onClick={() => router.push('/account/profile')}>Profile</li>
-//         {role === "truck_owner" && (
-//           <>
-//             <li className="p-2 cursor-pointer hover:text-red-800 font-bold" onClick={() => router.push('/trucks')}>Trucks</li>
-//             <li className="p-2 cursor-pointer hover:text-red-800 font-bold" onClick={() => router.push('/trucks/Assign-Request')}>Assign Delivery</li>
-//           </>
-//         )}
-//         {role === "customer" && (
-//           <li className="p-2 cursor-pointer hover:text-red-800 font-bold" onClick={() => router.push('/Loadmanage/getloadRequest')}>Loads Request</li>
-//         )}
-//         <li className="p-2 cursor-pointer hover:text-red-800 font-bold" onClick={handleLogout}>Logout</li>
-//       </>
-//     )}
-//   </ul>
-// ))
 
-// MobileMenu.displayName = "MobileMenu"
 
-// Memoized User Menu
 const UserMenu = memo(({ role, handleLogout, router }: MenuProps) => {
   const triggerId = useId()
   return (
@@ -74,6 +44,7 @@ const UserMenu = memo(({ role, handleLogout, router }: MenuProps) => {
           <>
             <DropdownMenuItem onClick={() => router.push('/trucks')}>Trucks</DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push('/trucks/Assign-Request')}>Assign Delivery</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/maintenance/list')}>Maintenance</DropdownMenuItem>
           </>
         )}
         {role === "customer" && (

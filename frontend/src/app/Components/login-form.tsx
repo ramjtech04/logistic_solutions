@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import {  useRouter } from "next/navigation";
 import Swal from 'sweetalert2';
+import { AuthContext } from "../context/AuthContext";
 
 export function LoginForm({
 
@@ -18,7 +19,7 @@ export function LoginForm({
   
   const [email,setemail]=useState("");
   const [password,setpassword]=useState("");
-  
+  const { setToken, setRole } = useContext(AuthContext)!;
   const handleLogin = async (e: React.FormEvent) => {
      
      e.preventDefault();
@@ -56,6 +57,8 @@ const url=process.env.NEXT_PUBLIC_URL_BASE;
       localStorage.setItem("token", data.data.token);
       localStorage.setItem("role", data.data.role);
         localStorage.setItem("userId", data.data.id);
+setToken(data.data.token);
+setRole(data.data.role);
       if (data.data.role === "admin") {
        
         router.push("/admin/dashboard");

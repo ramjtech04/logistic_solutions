@@ -10,7 +10,7 @@ import truckRoutes from "./routes/truckRoutes";
 import requestRoutes from "./routes/requestRoutes";
 import adminRoutes from "./routes/adminRoutes";
 import deliveryRoutes from "./routes/deliveryRoutes";
-
+import maintenanceRoutes from "./routes/maintanceRoutes";
 
 
 
@@ -30,6 +30,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // Routes
+
 app.use("/api/auth",authRoutes);
 app.use("/api/users",userRoutes);
 app.use("/api/roles",roleRoutes);
@@ -37,6 +38,7 @@ app.use("/api/trucks",truckRoutes);
 app.use("/api/requests",requestRoutes);
 app.use("/api/admin",adminRoutes);
 app.use("/api/delivery",deliveryRoutes);
+app.use("/api/maintenance",maintenanceRoutes);
 // Test Route
 app.get("/", (req: Request, res: Response) => {
   res.send("Backend is running with TypeScript!");

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, Wrench } from "lucide-react"
 import Link from "next/link";
 import { FaEye, FaTrashAlt } from "react-icons/fa";
 import { FaPen } from "react-icons/fa6";
@@ -182,13 +182,16 @@ export const columns=(refreshTable: () => void): ColumnDef<Trucks>[] => [
       <button onClick={handleDelete} className="text-red-500 hover:text-red-700 ">
         <FaTrashAlt size={16} />
       </button>
-      
+    
          <Link href={`/trucks/edit/${row.original._id}`} className="text-sky-500 hover:text-sky-700">
         <FaPen size={16} />
       </Link>
       
       <Link href={`/trucks/view/${row.original._id}`} className="text-pink-500 hover:text-pink-700">
         <FaEye size={16} />
+      </Link>
+        <Link href={`/maintenance/add`} className="text-yellow-500 hover:text-yellow-700">
+        <Wrench size={16} />
       </Link>
        
       

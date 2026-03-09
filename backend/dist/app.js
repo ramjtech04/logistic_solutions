@@ -15,6 +15,7 @@ const truckRoutes_1 = __importDefault(require("./routes/truckRoutes"));
 const requestRoutes_1 = __importDefault(require("./routes/requestRoutes"));
 const adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
 const deliveryRoutes_1 = __importDefault(require("./routes/deliveryRoutes"));
+const maintanceRoutes_1 = __importDefault(require("./routes/maintanceRoutes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 // Middleware
@@ -34,6 +35,7 @@ app.use("/api/trucks", truckRoutes_1.default);
 app.use("/api/requests", requestRoutes_1.default);
 app.use("/api/admin", adminRoutes_1.default);
 app.use("/api/delivery", deliveryRoutes_1.default);
+app.use("/api/maintenance", maintanceRoutes_1.default);
 // Test Route
 app.get("/", (req, res) => {
     res.send("Backend is running with TypeScript!");
